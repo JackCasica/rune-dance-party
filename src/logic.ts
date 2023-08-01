@@ -25,16 +25,27 @@ Rune.initLogic({
         key: playerId,
         playerId: playerId,
         limbs: [1, 1, 1, 1],
+        controls: ["Left Arm", "Right Arm", "Left Leg", "Right Leg"],
         score: 0,
+        correctStreak: 0,
         displayName: `Player ${index + 1}`,
       })),
     };
   },
   actions: {
     /* AS A SECOND ARGUMENT, EACH ACTION GETS ACCESS TO AN OBJECT CONTAINING THE CURRENT GAME STATE, THE PLAYER ID OF THE PLAYER INITIATING THE ACTION, AND AN ARRAY OF ALL PLAYER IDS. */
-    updateCardStack: (_, { game }) => {
-      /* A FUNCTION FOR REMOVING THE TOPMOST CARD FROM THE STACK */
-      game.cardStack.shift();
+    getStreak: (_, {game, playerId: initiatingPlayerId}) => {
+      const playerIndex = game.players.findIndex(
+        (player: Player) => player.playerId === initiatingPlayerId
+      );
+      return game.players[playerIndex].correctStreak
+    },
+
+    shuffleControls: (_, { game, playerId: initiatingPlayerId }) => {
+      const playerIndex = game.players.findIndex(
+        (player: Player) => player.playerId === initiatingPlayerId
+      );
+      // ...
     },
 
     toggleLimb: ({ limb }, { game, playerId: initiatingPlayerId }) => {
@@ -64,6 +75,9 @@ Rune.initLogic({
         }
       }, 0);
 
+      // if the player did earn more points this round, increase streak by 1 else reset to 0
+      player.score + score > player.score ? player.correctStreak++ : player.correctStreak = 0
+
       player.score = player.score + score;
     },
   },
@@ -75,22 +89,22 @@ Rune.initLogic({
       // Handle player left
     },
   },
-  update: ({ game }) => {
-    /* THIS UPDATE FUNCTION RUNS EVERY 1 SECOND */
-    /* GAME OVER AFTER 60 SECONDS */
-    const timeElapsed = Rune.gameTimeInSeconds();
-    game.remainingTime = 60 - timeElapsed;
-    if (game.remainingTime === 0) {
-      new Audio(gameOverSound).play()
-      Rune.gameOver({
-        players: {
-          [game.players[0].playerId]: game.players[0].score,
-          [game.players[1].playerId]: game.players[1].score,
-          [game.players[2].playerId]: game.players[2].score,
-          [game.players[3].playerId]: game.players[3].score,
-        },
-        delayPopUp: false,
-      });
-    }
-  },
+  // update: ({ game }) => {
+  //   /* THIS UPDATE FUNCTION RUNS EVERY 1 SECOND */
+  //   /* GAME OVER AFTER 60 SECONDS */
+  //   const timeElapsed = Rune.gameTimeInSeconds();
+  //   game.remainingTime = 60 - timeElapsed;
+  //   if (game.remainingTime === 0) {
+  //     new Audio(gameOverSound).play()
+  //     Rune.gameOver({
+  //       players: {
+  //         [game.players[0].playerId]: game.players[0].score,
+  //         [game.players[1].playerId]: game.players[1].score,
+  //         [game.players[2].playerId]: game.players[2].score,
+  //         [game.players[3].playerId]: game.players[3].score,
+  //       },
+  //       delayPopUp: false,
+  //     });
+  //   }
+  // },
 });

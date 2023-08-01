@@ -2,6 +2,7 @@ import { Stage } from "./components/Stage";
 import { Character } from "./components/Character.tsx";
 import { DanceFloor } from "./components/DanceFloor.tsx";
 import { Controls } from "./components/Controls.tsx";
+import { ControlsParent } from "./components/ControlsParent.tsx";
 import { useGame } from "./hooks/useGame.ts";
 import type { Player } from "./types/types.ts";
 import { Timer } from "./components/Timer.tsx";
@@ -29,7 +30,14 @@ function App() {
                     />
                 ))}
             </DanceFloor>
-            <Controls />
+            <ControlsParent>
+            {game.newGame.players.map((player: Player) => (
+                    <Controls
+                        key={player.playerId}
+                        player={player}
+                    />
+                ))}
+            </ControlsParent>
         </main>
     );
 }
