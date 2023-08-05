@@ -9,7 +9,8 @@ export enum LimbEnum {
 export type ControlsProps = {
     children?: React.ReactNode;
     game?: any;
-    player: Player;
+    playerId?: string;
+    player?: Player;
 
 };
 
@@ -43,6 +44,7 @@ export enum LimbPose {
 export type Player = {
     playerId: string;
     score: number;
+    index?: number;
     limbs: LimbEnum[];
     correctStreak: number;
     controls: string[];
@@ -61,9 +63,11 @@ export interface GameState {
     cardStack: Card[];
     winner?: string | null;
     players: Player[];
+    testNum?: number;
 }
 
 export type GameActions = {
+    testFunction: () => number;
     getStreak: () => number;
     shuffleControls: () => void;
     toggleLimb: (params: { limb: LimbEnum }) => void;

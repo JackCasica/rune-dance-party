@@ -11,6 +11,10 @@ export function getCount(game: GameState) {
   return game.count;
 }
 
+function getCurrentPlayer(game: GameState) {
+  return game.currentPlayerIndex
+}
+
 Rune.initLogic({
   minPlayers: 4 /* TEMPORARILY SET TO SHOW AUTOMATICALLY SHOW 4 DEVICES DURING DEVELOPMENT, BUT WILL ULTIMATELY SET TO 1 */,
   maxPlayers: 4,
@@ -23,6 +27,7 @@ Rune.initLogic({
       winner: null,
       players: playerIds.map((playerId, index) => ({
         key: playerId,
+        // index: index,
         playerId: playerId,
         limbs: [1, 1, 1, 1],
         controls: ["Left Arm", "Right Arm", "Left Leg", "Right Leg"],
@@ -34,6 +39,10 @@ Rune.initLogic({
   },
   actions: {
     /* AS A SECOND ARGUMENT, EACH ACTION GETS ACCESS TO AN OBJECT CONTAINING THE CURRENT GAME STATE, THE PLAYER ID OF THE PLAYER INITIATING THE ACTION, AND AN ARRAY OF ALL PLAYER IDS. */
+    testFunction: (_, {game}) => {
+      game.testNum = 2048;
+    },
+
     getStreak: (_, {game, playerId: initiatingPlayerId}) => {
       const playerIndex = game.players.findIndex(
         (player: Player) => player.playerId === initiatingPlayerId
@@ -45,7 +54,12 @@ Rune.initLogic({
       const playerIndex = game.players.findIndex(
         (player: Player) => player.playerId === initiatingPlayerId
       );
-      // ...
+      if (playerIndex === 0) {
+      // game.players[0].controls = ["Left Leg", "Right Arm", "Left Arm", "Right Leg"]
+      game.players[2].controls = ["Right Arm", "Left Leg", "Left Arm", "Right Leg"]
+      game.players[1].controls = ["Left Arm", "Right Arm", "Left Leg", "Right Leg"]
+      game.players[3].controls = ["Right Arm", "Right Leg", "Left Arm", "Left Leg"]
+      }
     },
 
     toggleLimb: ({ limb }, { game, playerId: initiatingPlayerId }) => {
@@ -75,8 +89,8 @@ Rune.initLogic({
         }
       }, 0);
 
-      // if the player did earn more points this round, increase streak by 1 else reset to 0
-      player.score + score > player.score ? player.correctStreak++ : player.correctStreak = 0
+      // if the player got a perfect score this round, increase streak by 1 else reset to 0
+      player.score + score == player.score + 4 ? player.correctStreak++ : player.correctStreak = 0
 
       player.score = player.score + score;
     },
@@ -89,22 +103,22 @@ Rune.initLogic({
       // Handle player left
     },
   },
-  // update: ({ game }) => {
-  //   /* THIS UPDATE FUNCTION RUNS EVERY 1 SECOND */
-  //   /* GAME OVER AFTER 60 SECONDS */
-  //   const timeElapsed = Rune.gameTimeInSeconds();
-  //   game.remainingTime = 60 - timeElapsed;
-  //   if (game.remainingTime === 0) {
-  //     new Audio(gameOverSound).play()
-  //     Rune.gameOver({
-  //       players: {
-  //         [game.players[0].playerId]: game.players[0].score,
-  //         [game.players[1].playerId]: game.players[1].score,
-  //         [game.players[2].playerId]: game.players[2].score,
-  //         [game.players[3].playerId]: game.players[3].score,
-  //       },
-  //       delayPopUp: false,
-  //     });
-  //   }
-  // },
+  update: ({ game }) => {
+    /* THIS UPDATE FUNCTION RUNS EVERY 1 SECOND */
+    /* GAME OVER AFTER 60 SECONDS */
+    const timeElapsed = Rune.gameTimeInSeconds();
+    game.remainingTime = 60 - timeElapsed;
+    if (game.remainingTime === 0) {
+      new Audio(gameOverSound).play()
+      Rune.gameOver({
+        players: {
+          [game.players[0].playerId]: game.players[0].score,
+          [game.players[1].playerId]: game.players[1].score,
+          [game.players[2].playerId]: game.players[2].score,
+          [game.players[3].playerId]: game.players[3].score,
+        },
+        delayPopUp: false,
+      });
+    }
+  },
 });

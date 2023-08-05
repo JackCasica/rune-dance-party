@@ -3,9 +3,10 @@ import { LimbEnum } from "../types/types";
 import interfaceClick from "../assets/interface click.wav";
 import { ControlsProps } from "../types/types";
 
-export const Controls: React.FC<ControlsProps> = ({ player }) => {
-  const [streak, setStreak] = useState<number>(player.correctStreak); // set to player streak
+export const Controls: React.FC<ControlsProps> = ({ game, playerId }) => {
+  const [streak, setStreak] = useState<number>(game.newGame.players[game.newGame.currentPlayerIndex].correctStreak); // set to player streak
   const [canShuffle, setCanShuffle] = useState<boolean>(streak === 4);
+  const player = game.newGame.players[game.newGame.currentPlayerIndex]
   const controlColors: Record<string, string> = {
     "Left Arm": "bg-ronchi",
     "Right Arm": "bg-willpower-orange",
@@ -24,7 +25,15 @@ export const Controls: React.FC<ControlsProps> = ({ player }) => {
 
   useEffect(() => {
     setCanShuffle(streak === 4);
+    // PLACEHOLDER SHUFFLER
+    Rune.actions.shuffleControls()
+    console.log(game)
+    // console.log(game.newGame.players[game.newGame.currentPlayerIndex])
   }, [streak]);
+
+  useEffect(() => {
+    setStreak(game.newGame.players[game.newGame.currentPlayerIndex].correctStreak);
+  }, [game.newGame.players[game.newGame.currentPlayerIndex].correctStreak])
 
   const shuffle = () => {};
 
@@ -36,7 +45,9 @@ export const Controls: React.FC<ControlsProps> = ({ player }) => {
       <div className="flex justify-center items-end h-14">
         {/* Shuffle Opponent Cards */}
         <div
-          onClick={() => {}}
+          onClick={() => {
+            setStreak(game.newGame.players[game.newGame.currentPlayerIndex].correctStreak)
+          }}
           className={`${
             canShuffle ? "border-black" : "border-stone-400"
           } flex items-center justify-center relative w-3/4 h-3/4 text-s font-black bg-white/20 rounded-xl border-4`}
@@ -65,11 +76,11 @@ export const Controls: React.FC<ControlsProps> = ({ player }) => {
       {/* SECOND COL: controls */}
       <div className="flex justify-center items-start h-32 pt-2">
         <div className="flex w-full h-3/4 bg-black border-8 border-black rounded-3xl overflow-clip ">
-            
-            {player.controls.map((control, i)=>(
+            {player.controls.map((control: string, i: number) => (
                 <button
+                key={`control-${player.playerId}-${i}`}
                 className={`w-full h-full text-xs font-black transition-all rounded-none hover:opacity-90 bg-black/20 ${controlColors[control]}`}
-                onClick={() => onClickHandler(LimbEnum[player.controls[i].replace(/\s+/g, '') as keyof typeof LimbEnum])}
+                onClick={() => onClickHandler(LimbEnum[control.replace(/\s+/g, '') as keyof typeof LimbEnum])}
               >
                 {control}
               </button>
