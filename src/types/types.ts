@@ -6,19 +6,17 @@ export enum LimbEnum {
     RightLeg,
 }
 
+export type ControlsProps = {
+    children?: React.ReactNode;
+    game?: any;
+    playerId?: string;
+    player?: Player;
+
+};
+
 export type DanceFloorProps = {
     children?: React.ReactNode;
     game?: GameState; // Replace 'any' with the actual type of your game state
-};
-
-export type TimerProps = {
-    children?: React.ReactNode;
-    game: any; // Replace 'any' with the actual type of your game state
-};
-
-export type StageProps = {
-    children?: React.ReactNode;
-    game: any;
 };
 
 export type RoundTimerProps = {
@@ -26,6 +24,16 @@ export type RoundTimerProps = {
     game: any;
     activeCardIndex: number;
 }
+
+export type StageProps = {
+    children?: React.ReactNode;
+    game: any;
+};
+
+export type TimerProps = {
+    children?: React.ReactNode;
+    game: any; // Replace 'any' with the actual type of your game state
+};
 
 export enum LimbPose {
     Straight = 1,
@@ -36,7 +44,10 @@ export enum LimbPose {
 export type Player = {
     playerId: string;
     score: number;
+    index?: number;
     limbs: LimbEnum[];
+    correctStreak: number;
+    controls: string[];
     displayName: string;
 };
 
@@ -52,10 +63,13 @@ export interface GameState {
     cardStack: Card[];
     winner?: string | null;
     players: Player[];
+    testNum?: number;
 }
 
 export type GameActions = {
-    updateCardStack: () => void;
+    testFunction: () => number;
+    getStreak: () => number;
+    shuffleControls: () => void;
     toggleLimb: (params: { limb: LimbEnum }) => void;
     checkPlayerPoses: (params: { index: number }) => void;
 };

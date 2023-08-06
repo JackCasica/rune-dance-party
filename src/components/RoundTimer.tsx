@@ -36,6 +36,7 @@ export const RoundTimer: React.FC<RoundTimerProps> = ({
     if (progress % INTERVAL === 0 && progress < 59 && progress > 0) {
       // new Audio(transition).play()
       Rune.actions.checkPlayerPoses({ index: activeCardIndex });
+      Rune.actions.getStreak()
       console.log('checking player poses')
       turnCard();
       setRoundNumber((prev) => prev + 1);

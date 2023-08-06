@@ -11,6 +11,10 @@ export function getCount(game: GameState) {
   return game.count;
 }
 
+function getCurrentPlayer(game: GameState) {
+  return game.currentPlayerIndex
+}
+
 Rune.initLogic({
   minPlayers: 4 /* TEMPORARILY SET TO SHOW AUTOMATICALLY SHOW 4 DEVICES DURING DEVELOPMENT, BUT WILL ULTIMATELY SET TO 1 */,
   maxPlayers: 4,
@@ -23,18 +27,39 @@ Rune.initLogic({
       winner: null,
       players: playerIds.map((playerId, index) => ({
         key: playerId,
+        // index: index,
         playerId: playerId,
         limbs: [1, 1, 1, 1],
+        controls: ["Left Arm", "Right Arm", "Left Leg", "Right Leg"],
         score: 0,
+        correctStreak: 0,
         displayName: `Player ${index + 1}`,
       })),
     };
   },
   actions: {
     /* AS A SECOND ARGUMENT, EACH ACTION GETS ACCESS TO AN OBJECT CONTAINING THE CURRENT GAME STATE, THE PLAYER ID OF THE PLAYER INITIATING THE ACTION, AND AN ARRAY OF ALL PLAYER IDS. */
-    updateCardStack: (_, { game }) => {
-      /* A FUNCTION FOR REMOVING THE TOPMOST CARD FROM THE STACK */
-      game.cardStack.shift();
+    testFunction: (_, {game}) => {
+      game.testNum = 2048;
+    },
+
+    getStreak: (_, {game, playerId: initiatingPlayerId}) => {
+      const playerIndex = game.players.findIndex(
+        (player: Player) => player.playerId === initiatingPlayerId
+      );
+      return game.players[playerIndex].correctStreak
+    },
+
+    shuffleControls: (_, { game, playerId: initiatingPlayerId }) => {
+      const playerIndex = game.players.findIndex(
+        (player: Player) => player.playerId === initiatingPlayerId
+      );
+      if (playerIndex === 0) {
+      // game.players[0].controls = ["Left Leg", "Right Arm", "Left Arm", "Right Leg"]
+      game.players[2].controls = ["Right Arm", "Left Leg", "Left Arm", "Right Leg"]
+      game.players[1].controls = ["Left Arm", "Right Arm", "Left Leg", "Right Leg"]
+      game.players[3].controls = ["Right Arm", "Right Leg", "Left Arm", "Left Leg"]
+      }
     },
 
     toggleLimb: ({ limb }, { game, playerId: initiatingPlayerId }) => {
@@ -63,6 +88,9 @@ Rune.initLogic({
           return acc;
         }
       }, 0);
+
+      // if the player got a perfect score this round, increase streak by 1 else reset to 0
+      player.score + score == player.score + 4 ? player.correctStreak++ : player.correctStreak = 0
 
       player.score = player.score + score;
     },
