@@ -1,96 +1,105 @@
 // export type Limb = "left arm" | "right arm" | "left leg" | "right leg";
 export enum LimbEnum {
-    LeftArm,
-    RightArm,
-    LeftLeg,
-    RightLeg,
+	LeftArm,
+	RightArm,
+	LeftLeg,
+	RightLeg,
 }
 
 export type ControlsProps = {
-    children?: React.ReactNode;
-    game?: any;
-    playerId?: string;
-    player?: Player;
-
+	children?: React.ReactNode;
+	game?: any;
+	playerId?: string;
+	player?: Player;
+	yourPlayerId?: string;
 };
 
 export type DanceFloorProps = {
-    children?: React.ReactNode;
-    game?: GameState; // Replace 'any' with the actual type of your game state
+	children?: React.ReactNode;
+	game?: GameState; // Replace 'any' with the actual type of your game state
 };
 
 export type RoundTimerProps = {
-    turnCard: Function;
-    game: any;
-    activeCardIndex: number;
-}
+	turnCard: Function;
+	game: any;
+	activeCardIndex: number;
+};
 
 export type StageProps = {
-    children?: React.ReactNode;
-    game: any;
+	children?: React.ReactNode;
+	game: any;
 };
 
 export type TimerProps = {
-    children?: React.ReactNode;
-    game: any; // Replace 'any' with the actual type of your game state
+	children?: React.ReactNode;
+	game: any; // Replace 'any' with the actual type of your game state
 };
 
 export enum LimbPose {
-    Straight = 1,
-    BentUp = 2,
-    BentDown = 3,
+	Straight = 1,
+	BentUp = 2,
+	BentDown = 3,
 }
 
 export type Player = {
-    playerId: string;
-    score: number;
-    index?: number;
-    limbs: LimbEnum[];
-    correctStreak: number;
-    controls: string[];
-    displayName: string;
+	playerId: string;
+	score: number;
+	index?: number;
+	limbs: LimbEnum[];
+	correctStreak: number;
+	controlsOrder: string[];
 };
 
 export type Card = {
-    color: string;
-    limbs: LimbEnum[];
+	color: string;
+	limbs: LimbEnum[];
 };
 
 export interface GameState {
-    count: number;
-    currentPlayerIndex?: number;
-    remainingTime?: number;
-    cardStack: Card[];
-    winner?: string | null;
-    players: Player[];
-    testNum?: number;
+	count: number;
+	currentPlayerIndex?: number;
+	remainingTime?: number;
+	cardStack: Card[];
+	winner?: string | null;
+	players: Player[];
+	testNum?: number;
 }
 
 export type GameActions = {
-    testFunction: () => number;
-    getStreak: () => number;
-    shuffleControls: () => void;
-    toggleLimb: (params: { limb: LimbEnum }) => void;
-    checkPlayerPoses: (params: { index: number }) => void;
+	getStreak: () => number;
+	shuffleEnemyControls: () => void;
+	toggleLimb: (params: { limb: LimbEnum }) => void;
+	checkPlayerPoses: (params: { index: number }) => void;
 };
 
 export type CharacterProps = {
-    player: Player;
-    playerName: string;
+	player: Player;
+	playerName: string;
 };
 
 export type LimbProps = {
-    limb: LimbEnum;
-    limbPoses?: {
-        leftArm: number;
-        rightArm: number;
-        leftLeg: number;
-        rightLeg: number;
-    };
-    player: Player;
+	limb: LimbEnum;
+	limbPoses?: {
+		leftArm: number;
+		rightArm: number;
+		leftLeg: number;
+		rightLeg: number;
+	};
+	player: Player;
 };
 
 export type BodyProps = {
-    children: React.ReactElement<LimbProps>[] | React.ReactElement<LimbProps>;
-    player: Player;
+	children: React.ReactElement<LimbProps>[] | React.ReactElement<LimbProps>;
+	player: Player;
+};
+
+export type PowerUpsProps = {
+	children?: React.ReactNode;
+	game?: any;
+	player?: Player;
+};
+
+export type LimbControlsProps = {
+	children?: React.ReactNode;
+	game?: any;
 };
