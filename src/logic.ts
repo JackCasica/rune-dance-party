@@ -2,6 +2,7 @@ import type { RuneClient } from "rune-games-sdk/multiplayer";
 import type { GameState, GameActions, Player } from "./types/types";
 import { generateCardStack } from "./util/generateCardStack.ts";
 import gameOverSound from "./assets/game over.wav";
+import shuffleSound from "./assets/shuffle.wav";
 
 declare global {
 	const Rune: RuneClient<GameState, GameActions>;
@@ -40,9 +41,17 @@ Rune.initLogic({
 			/* THIS ACTION SHUFFLES THE ORDER OF THE CONTROLS FOR ALL PLAYERS EXCEPT THE PLAYER WHO INITIATED THE ACTION */
 			game.players.forEach((player) => {
 				if (player.playerId !== initiatingPlayerId) {
-					player.controlsOrder = ["Right Arm", "Left Leg", "Left Arm", "Right Leg"];
+					let possibleLimbs = ["Right Arm", "Left Leg", "Left Arm", "Right Leg"]
+					for (let i = 2; i>0; i--){
+						const j = Math.floor(Math.random() * (i + 1));
+						[possibleLimbs[i], possibleLimbs[j]] = [possibleLimbs[j], possibleLimbs[i]]
+					}
+					player.controlsOrder = possibleLimbs;
 				}
 			});
+			const playerIndex = game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId);
+			const initiatingPlayer = game.players[playerIndex];
+			initiatingPlayer.correctStreak = 0
 		},
 
 		toggleLimb: ({ limb }, { game, playerId: initiatingPlayerId }) => {
