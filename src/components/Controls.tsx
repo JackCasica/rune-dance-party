@@ -41,11 +41,11 @@ const Powerups: React.FC<PowerUpsProps> = ({ game }) => {
 		<div className="flex justify-center items-end h-14">
 			<button
 				onClick={onClickHandler}
-				className={`border-black flex items-center justify-center relative w-3/4 h-3/4 text-s font-black  rounded-xl border-4 hover:cursor-pointer ${
+				className={`border-black flex items-center justify-center relative p-0 w-3/4 h-3/4 text-s font-black rounded-xl border-4 hover:cursor-pointer ${
 					correctStreak ? "border-black bg-white" : "border-stone-400 bg-white/20"
 				}`}
 			>
-				Shuffle Opponent Cards
+				Shuffle Opponent Controls
 			</button>
 		</div>
 	);
