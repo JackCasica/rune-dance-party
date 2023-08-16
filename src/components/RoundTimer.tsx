@@ -6,7 +6,7 @@ export const RoundTimer: React.FC<RoundTimerProps> = ({ game, turnCard, activeCa
 	const INTERVAL = 6; // THIS IS THE AMOUNT OF TIME IN A ROUND, IN SECONDS
 	const gameTimerProgress = 60 - game.newGame.remainingTime;
 	const [progress, setProgress] = useState<number>(gameTimerProgress);
-	const [roundNumber, setRoundNumber] = useState<number>(1);
+	const { currentRound } = game.newGame
 
 	// useEffect(() => {
 	//   console.log(game);
@@ -35,17 +35,17 @@ export const RoundTimer: React.FC<RoundTimerProps> = ({ game, turnCard, activeCa
 			Rune.actions.getStreak();
 			// console.log('checking player poses')
 			turnCard();
-			setRoundNumber((prev) => prev + 1);
+			Rune.actions.incrementRoundNumber()
 			new Audio(pageTurn).play();
 		}
 	}, [progress]);
 
 	useEffect(() => {
 		// SCORE THE LAST ROUND A SECOND EARLY so gameOver doesn't interfere... may change later
-		if (roundNumber === 10 && game.newGame.remainingTime === 1) {
+		if (currentRound === 10 && game.newGame.remainingTime === 1) {
 			Rune.actions.checkPlayerPoses({ index: activeCardIndex });
 		}
-	}, [roundNumber, game.newGame.remainingTime]);
+	}, [currentRound, game.newGame.remainingTime]);
 
 	return (
 		<>

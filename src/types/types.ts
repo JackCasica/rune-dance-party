@@ -47,6 +47,7 @@ export type Player = {
 	index?: number;
 	limbs: LimbEnum[];
 	correctStreak: number;
+	autoLimb: boolean;
 	controlsOrder: string[];
 };
 
@@ -59,6 +60,7 @@ export interface GameState {
 	count: number;
 	currentPlayerIndex?: number;
 	remainingTime?: number;
+	currentRound: number;
 	cardStack: Card[];
 	winner?: string | null;
 	players: Player[];
@@ -67,7 +69,10 @@ export interface GameState {
 
 export type GameActions = {
 	getStreak: () => number;
+	incrementRoundNumber: () => void;
 	shuffleEnemyControls: () => void;
+	resetStreak: () => void;
+	toggleAutoLimb: (isActive: boolean) => void;
 	toggleLimb: (params: { limb: LimbEnum }) => void;
 	checkPlayerPoses: (params: { index: number }) => void;
 };

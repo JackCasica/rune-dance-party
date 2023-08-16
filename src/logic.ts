@@ -2,7 +2,6 @@ import type { RuneClient } from "rune-games-sdk/multiplayer";
 import type { GameState, GameActions, Player } from "./types/types";
 import { generateCardStack } from "./util/generateCardStack.ts";
 import gameOverSound from "./assets/game over.wav";
-import shuffleSound from "./assets/shuffle.wav";
 
 declare global {
 	const Rune: RuneClient<GameState, GameActions>;
@@ -16,6 +15,7 @@ Rune.initLogic({
 			count: 0,
 			currentPlayerIndex: 0,
 			remainingTime: 60, // Should be 60 seconds for production
+			currentRound: 1,
 			cardStack: generateCardStack(10),
 			winner: null,
 			players: playerIds.map((playerId) => ({
@@ -25,6 +25,7 @@ Rune.initLogic({
 				controlsOrder: ["Left Arm", "Right Arm", "Left Leg", "Right Leg"],
 				score: 0,
 				correctStreak: 0,
+				autoLimb: false
 			})),
 		};
 	},
@@ -33,6 +34,10 @@ Rune.initLogic({
 		getStreak: (_, { game, playerId: initiatingPlayerId }) => {
 			const playerIndex = game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId);
 			return game.players[playerIndex].correctStreak;
+		},
+
+		incrementRoundNumber: (_, { game }) => {
+			game.currentRound++
 		},
 
 		shuffleEnemyControls: (_, { game, playerId: initiatingPlayerId }) => {
@@ -49,9 +54,18 @@ Rune.initLogic({
 					player.controlsOrder = possibleLimbs;
 				}
 			});
+		},
+		
+		resetStreak: (_, { game, playerId: initiatingPlayerId }) => {
 			const playerIndex = game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId);
 			const initiatingPlayer = game.players[playerIndex];
 			initiatingPlayer.correctStreak = 0
+		},
+		
+		toggleAutoLimb: (isActive, { game, playerId: initiatingPlayerId }) => {
+			const playerIndex = game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId);
+			const initiatingPlayer = game.players[playerIndex];
+			initiatingPlayer.autoLimb = isActive
 		},
 
 		toggleLimb: ({ limb }, { game, playerId: initiatingPlayerId }) => {
