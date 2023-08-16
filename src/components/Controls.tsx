@@ -119,6 +119,7 @@ const LimbControls: React.FC<LimbControlsProps> = ({ game }) => {
     Rune.actions.toggleLimb({
       limb: limb,
     });
+	// console.log(game)
   };
 
   /* RENDERING OUT THE FOUR LIMB CONTROLS */

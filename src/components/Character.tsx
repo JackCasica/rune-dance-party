@@ -7,6 +7,7 @@ import "../index.css";
 const Limb: React.FC<LimbProps> = ({ limb, player }) => {
 	let position;
 	let limbType;
+	const { autoLimb } = player
 
 	switch (limb) {
 		case LimbEnum.LeftArm:
@@ -33,19 +34,19 @@ const Limb: React.FC<LimbProps> = ({ limb, player }) => {
 	}
 
 	return (
-		<div className={`absolute font-black text-xs ${position} w-3/4 aspect-square`}>
-			{/* {player.limbs[limb]} */}
+		<div className={`absolute font-black text-xl ${position} w-3/4 aspect-square`}>
+			{player.limbs[limb]} {/* Remove for production; just helps match numbers during development */}
 			<img
 				src={`/limbs/${limbType}Pose=0.png`}
-				className={`absolute ${player.limbs[limb] === 1 ? "opacity-100" : "opacity-0"}`}
+				className={`${limbType === "LeftArm" && autoLimb && 'invert'} absolute ${player.limbs[limb] === 1 ? "opacity-100" : "opacity-0"}`}
 			/>
 			<img
 				src={`/limbs/${limbType}Pose=1.png`}
-				className={`absolute ${player.limbs[limb] === 2 ? "opacity-100" : "opacity-0"}`}
+				className={`${limbType === "LeftArm" && autoLimb && 'invert'} absolute ${player.limbs[limb] === 2 ? "opacity-100" : "opacity-0"}`}
 			/>
 			<img
 				src={`/limbs/${limbType}Pose=2.png`}
-				className={`absolute ${player.limbs[limb] === 3 ? "opacity-100" : "opacity-0"}`}
+				className={`${limbType === "LeftArm" && autoLimb && 'invert'} absolute ${player.limbs[limb] === 3 ? "opacity-100" : "opacity-0"}`}
 			/>
 		</div>
 	);

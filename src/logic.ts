@@ -66,6 +66,11 @@ Rune.initLogic({
 			const playerIndex = game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId);
 			const initiatingPlayer = game.players[playerIndex];
 			initiatingPlayer.autoLimb = isActive
+
+			// this doesn't work:
+			// const activeCard = game.cardStack[activeIndex];
+			// const playerLimbPoses = initiatingPlayer.limbs;
+			// playerLimbPoses[0] = activeCard.limbs[0]
 		},
 
 		toggleLimb: ({ limb }, { game, playerId: initiatingPlayerId }) => {
