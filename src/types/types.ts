@@ -6,6 +6,15 @@ export enum LimbEnum {
 	RightLeg,
 }
 
+export type StageCardProps = {
+	color: string;
+	leftOffset?: string;
+	z?: string;
+	active?: boolean;
+	limbs?: number[];
+	shown: boolean;
+  };
+
 export type ControlsProps = {
 	children?: React.ReactNode;
 	game?: any;
@@ -51,8 +60,9 @@ export type Player = {
 	index?: number;
 	limbs: LimbEnum[];
 	correctStreak: number;
-	autoLimb: boolean;
 	controlsOrder: string[];
+	autoLimb: boolean;
+	predictor: boolean;
 };
 
 export type Card = {
@@ -75,10 +85,11 @@ export interface GameState {
 export type GameActions = {
 	getStreak?: () => number;
 	incrementRoundNumber: () => void;
-	shuffleEnemyControls: () => void;
 	subtractStreak: (cost: number) => void;
 	updateActiveCard: (index: number) => void;
-	toggleAutoLimb: (params: {isActive: boolean, index?: number}) => void;
+	shuffleEnemyControls: () => void;
+	toggleAutoLimb: (params: { isActive: boolean, index?: number }) => void;
+	togglePredictor: (params: { isActive: boolean }) => void;
 	toggleLimb: (params: { limb: LimbEnum }) => void;
 	checkPlayerPoses: (params: { index: number }) => void;
 };

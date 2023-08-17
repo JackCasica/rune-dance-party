@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-
-type StageCardProps = {
-  color: string;
-  leftOffset?: string;
-  z?: string;
-  active?: boolean;
-  limbs?: number[];
-};
+import type { StageCardProps } from '../types/types'
 
 export const StageCard: React.FC<StageCardProps> = ({
   color,
@@ -14,6 +7,7 @@ export const StageCard: React.FC<StageCardProps> = ({
   z,
   active,
   limbs,
+  shown
 }) => {
   const [colorNicer, setColorNicer] = useState<Record<string,string>>({
     'pink': 'bg-vivid-raspberry',
@@ -29,6 +23,7 @@ export const StageCard: React.FC<StageCardProps> = ({
         className= {`absolute w-10 h-14 border-4 ${active ? "border-white" : "border-black"} rounded-xl ${colorNicer[color]}`}
         style={{ left: leftOffset , zIndex: z, width: "20vw", height: "25vw" }}
       >
+        {shown ? 
         <div className="bold">
           {limbs && limbs[0]}
           {limbs && limbs[1]}
@@ -36,6 +31,12 @@ export const StageCard: React.FC<StageCardProps> = ({
           {limbs && limbs[2]}
           {limbs && limbs[3]}
           </div>
+          :
+          <>
+          <br/>
+          ?
+          </>
+          }
       </div>
     </>
   );
