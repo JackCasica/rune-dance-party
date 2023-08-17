@@ -12,6 +12,8 @@ export type ControlsProps = {
 	playerId?: string;
 	player?: Player;
 	yourPlayerId?: string;
+	activeCardIndex: number;
+	setActiveCardIndex: Function;
 };
 
 export type DanceFloorProps = {
@@ -28,6 +30,8 @@ export type RoundTimerProps = {
 export type StageProps = {
 	children?: React.ReactNode;
 	game: any;
+	activeCardIndex: number;
+	setActiveCardIndex: Function;
 };
 
 export type TimerProps = {
@@ -61,6 +65,7 @@ export interface GameState {
 	currentPlayerIndex?: number;
 	remainingTime?: number;
 	currentRound: number;
+	activeCard: Card | null;
 	cardStack: Card[];
 	winner?: string | null;
 	players: Player[];
@@ -68,11 +73,12 @@ export interface GameState {
 }
 
 export type GameActions = {
-	getStreak: () => number;
+	getStreak?: () => number;
 	incrementRoundNumber: () => void;
 	shuffleEnemyControls: () => void;
-	resetStreak: () => void;
-	toggleAutoLimb: (isActive: boolean) => void;
+	subtractStreak: (cost: number) => void;
+	updateActiveCard: (index: number) => void;
+	toggleAutoLimb: (params: {isActive: boolean, index?: number}) => void;
 	toggleLimb: (params: { limb: LimbEnum }) => void;
 	checkPlayerPoses: (params: { index: number }) => void;
 };
@@ -102,6 +108,8 @@ export type PowerUpsProps = {
 	children?: React.ReactNode;
 	game?: any;
 	player?: Player;
+	activeCardIndex: number;
+	setActiveCardIndex: Function;
 };
 
 export type LimbControlsProps = {

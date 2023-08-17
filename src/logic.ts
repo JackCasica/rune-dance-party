@@ -1,5 +1,5 @@
 import type { RuneClient } from "rune-games-sdk/multiplayer";
-import type { GameState, GameActions, Player } from "./types/types";
+import { GameState, GameActions, Player, LimbEnum } from "./types/types";
 import { generateCardStack } from "./util/generateCardStack.ts";
 import gameOverSound from "./assets/game over.wav";
 
@@ -17,6 +17,7 @@ Rune.initLogic({
 			remainingTime: 60, // Should be 60 seconds for production
 			currentRound: 1,
 			cardStack: generateCardStack(10),
+			activeCard: null,
 			winner: null,
 			players: playerIds.map((playerId) => ({
 				key: playerId,
@@ -31,18 +32,18 @@ Rune.initLogic({
 	},
 	actions: {
 		/* FIRST ARGUMENT IS A PAYLOAD, USE "_", WHEN PAYLOAD ISNT REQUIRED AND YOU STILL WANT TO ACCESS THE SECOND ARGUMENT. AS A SECOND ARGUMENT, EACH ACTION GETS ACCESS TO AN OBJECT CONTAINING THE CURRENT GAME STATE, THE PLAYER ID OF THE PLAYER INITIATING THE ACTION, AND AN ARRAY OF ALL PLAYER IDS. */
-		getStreak: (_, { game, playerId: initiatingPlayerId }) => {
-			const playerIndex = game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId);
-			return game.players[playerIndex].correctStreak;
-		},
 
 		incrementRoundNumber: (_, { game }) => {
 			game.currentRound++
 		},
 
+		updateActiveCard: (index, { game }) => {
+			game.activeCard = game.cardStack[index]
+		},
+
 		shuffleEnemyControls: (_, { game, playerId: initiatingPlayerId }) => {
 			// const playerIndex = game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId);
-
+			console.log('shuffling')
 			/* THIS ACTION SHUFFLES THE ORDER OF THE CONTROLS FOR ALL PLAYERS EXCEPT THE PLAYER WHO INITIATED THE ACTION */
 			game.players.forEach((player) => {
 				if (player.playerId !== initiatingPlayerId) {
@@ -54,23 +55,27 @@ Rune.initLogic({
 					player.controlsOrder = possibleLimbs;
 				}
 			});
+			// Rune.actions.resetStreak();
 		},
 		
-		resetStreak: (_, { game, playerId: initiatingPlayerId }) => {
+		subtractStreak: (cost, { game, playerId: initiatingPlayerId }) => {
+			// console.log('resetting streak')
 			const playerIndex = game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId);
 			const initiatingPlayer = game.players[playerIndex];
-			initiatingPlayer.correctStreak = 0
+			initiatingPlayer.correctStreak -= cost
 		},
 		
-		toggleAutoLimb: (isActive, { game, playerId: initiatingPlayerId }) => {
+		toggleAutoLimb: ({ isActive, index }, { game, playerId: initiatingPlayerId }) => {
+			// console.log('auto limb is ' + `${isActive? 'ACTIVE' : 'INACTIVE'}`)
 			const playerIndex = game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId);
 			const initiatingPlayer = game.players[playerIndex];
 			initiatingPlayer.autoLimb = isActive
 
-			// this doesn't work:
-			// const activeCard = game.cardStack[activeIndex];
-			// const playerLimbPoses = initiatingPlayer.limbs;
-			// playerLimbPoses[0] = activeCard.limbs[0]
+			// MJP TODO: Why not work
+			if (isActive === true && index){
+				initiatingPlayer.limbs[LimbEnum.LeftArm] = game.cardStack[index].limbs[0];
+				initiatingPlayer.correctStreak = 0
+			}
 		},
 
 		toggleLimb: ({ limb }, { game, playerId: initiatingPlayerId }) => {
@@ -86,11 +91,12 @@ Rune.initLogic({
 			/* COMPARE LIMBS OF EACH PLAYER AGAINST FRONTMOST CARD IN CARDSTACK, THEN UPDATES SCORE PROPERTY FOR EACH PLAYER */
 			const playerIndex = game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId);
 			const player = game.players[playerIndex];
-			const activeCard = game.cardStack[index];
+			// game.activeCard = game.cardStack[index]
+			// const activeCard = game.cardStack[index];
 			const playerLimbPoses = player.limbs;
 
 			const score = playerLimbPoses.reduce((acc, limbPose, i) => {
-				if (limbPose === activeCard.limbs[i]) {
+				if (limbPose === game.cardStack[index].limbs[i]) {
 					return acc + 1;
 				} else {
 					return acc;
@@ -98,8 +104,8 @@ Rune.initLogic({
 			}, 0);
 
 			// if the player got a perfect score this round, increase streak by 1 else reset to 0
+			// player.score + score == player.score + 4 && player.correctStreak++;
 			player.score + score == player.score + 4 ? player.correctStreak++ : (player.correctStreak = 0);
-
 			player.score = player.score + score;
 		},
 	},

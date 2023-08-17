@@ -13,13 +13,13 @@ import type {
 } from "../types/types";
 import { LimbEnum } from "../types/types";
 
-const Powerups: React.FC<PowerUpsProps> = ({ game }) => {
+const Powerups: React.FC<PowerUpsProps> = ({ game, activeCardIndex, setActiveCardIndex }) => {
   const { controlsOrder: oldControlsOrder } = game.oldGame.players.find(
     (player: Player) => player.playerId === game.yourPlayerId
   );
 
-  const { currentRound: oldRound } = game.oldGame
-  const { currentRound } = game.newGame
+  const { currentRound: oldRound } = game.oldGame;
+  const { currentRound } = game.newGame;
 
   const { correctStreak, controlsOrder, autoLimb } = game.newGame.players.find(
     (player: Player) => player.playerId === game.yourPlayerId
@@ -30,27 +30,29 @@ const Powerups: React.FC<PowerUpsProps> = ({ game }) => {
     if (correctStreak >= 1) {
       new Audio(shuffle).play();
       Rune.actions.shuffleEnemyControls();
-      Rune.actions.resetStreak();
+      // subtracts 1 from streak
+      Rune.actions.subtractStreak(1);
     }
   };
 
   const onAutoLimbHandler = () => {
-    // if you clicked this button and you have a streak of 2, play shuffle sound to yourself
+    /* AUTO LIMB:
+      - Always activates on left arm only
+      - Lasts 1 round
+      - Temporarily disables player's use of left arm
+      - Subtracts 2 from streak
+    */
+    // if you clicked this button and you have a streak of 2, play revealBonus sound to yourself and auto move Left Arm
     if (correctStreak >= 2) {
       new Audio(revealBonus).play();
-	//   AUTO LIMB PLAN: 
-	//   - Will always activate on the left arm.
-	//   - Deactivates at the end of the round.
-	//   - Temporarily disables the left arm control
-	//   - Spends the whole streak (resets streak to 0 after use)
-	Rune.actions.toggleAutoLimb(true)
-	Rune.actions.resetStreak();
+      Rune.actions.toggleAutoLimb({ isActive: true, index: activeCardIndex});
+      Rune.actions.subtractStreak(2);
     }
   };
 
   useEffect(() => {
-	oldRound != currentRound && Rune.actions.toggleAutoLimb(false)
-  }, [oldRound, currentRound])
+    oldRound != currentRound && Rune.actions.toggleAutoLimb({ isActive: false });
+  }, [oldRound, currentRound]);
 
   useEffect(() => {
     if (
@@ -68,7 +70,7 @@ const Powerups: React.FC<PowerUpsProps> = ({ game }) => {
     const revealBonusAudio = new Audio(spellWaves);
     // had to up the volume on spellWaves
     revealBonusAudio.volume = 1;
-    correctStreak >= 1 || correctStreak >= 2 && revealBonusAudio.play();
+    correctStreak >= 1 || (correctStreak >= 2 && revealBonusAudio.play());
   }, [correctStreak]);
 
   return (
@@ -119,7 +121,7 @@ const LimbControls: React.FC<LimbControlsProps> = ({ game }) => {
     Rune.actions.toggleLimb({
       limb: limb,
     });
-	// console.log(game)
+    // console.log(game)
   };
 
   /* RENDERING OUT THE FOUR LIMB CONTROLS */
@@ -133,12 +135,15 @@ const LimbControls: React.FC<LimbControlsProps> = ({ game }) => {
             key={control}
             className={`relative px-10 py-6 w-full h-full text-xs font-black
 			transition-all rounded-none hover:opacity-90 bg-black/10
-			${autoLimb && control === "Left Arm" ? 'bg-slate-400': buttonColor}`}
-            onClick = {autoLimb && control === "Left Arm" 
-				? () => {} 
-				: () => onClickHandler(
-					LimbEnum[control.replace(/\s+/g, "") as keyof typeof LimbEnum]
-				)
+			${autoLimb && control === "Left Arm" ? "bg-slate-400" : buttonColor}`}
+            onClick={
+              autoLimb && control === "Left Arm"
+                ? () => {}
+                : () => {
+                    onClickHandler(
+                      LimbEnum[control.replace(/\s+/g, "") as keyof typeof LimbEnum]
+                    );
+                  }
             }
           >
             <img
@@ -153,11 +158,13 @@ const LimbControls: React.FC<LimbControlsProps> = ({ game }) => {
   );
 };
 
-export const Controls: React.FC<ControlsProps> = ({ game }) => {
+export const Controls: React.FC<ControlsProps> = ({ game, activeCardIndex, setActiveCardIndex }) => {
   /* RENDERING OUT THE BOTTOM CONTROLS INCLUDING THE POWERS UPS, AND LIMB CONTROLS */
   return (
     <div className="flex-col">
-      <Powerups game={game} />
+      <Powerups game={game} 
+	activeCardIndex={activeCardIndex}
+	setActiveCardIndex={setActiveCardIndex} />
       <LimbControls game={game} />
     </div>
   );

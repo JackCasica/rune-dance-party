@@ -9,6 +9,7 @@ import { Timer } from "./components/Timer.tsx";
 import { useState } from "react";
 
 function App() {
+    const [activeCardIndex, setActiveCardIndex] = useState<number>(0)
 	/* THIS IS THE GAME DATA FROM SERVER. PASS THIS TO COMPONENTS THAT NEED GAME STATE DATA, ETC */
 	const game = useGame();
 
@@ -30,7 +31,7 @@ function App() {
 	return (
 		<main className="flex flex-col items-center justify-center w-full h-screen gap-4 p-8 bg-brilliant-azure ">
 			<Timer game={game} />
-			<Stage game={game} />
+			<Stage game={game} activeCardIndex={activeCardIndex} setActiveCardIndex={setActiveCardIndex} />
 			<DanceFloor>
 				{game.newGame.players.map((player: Player) => (
 					<Character
@@ -40,7 +41,7 @@ function App() {
 					/>
 				))}
 			</DanceFloor>
-			<Controls game={game} />
+			<Controls game={game} activeCardIndex={activeCardIndex} setActiveCardIndex={setActiveCardIndex} />
 		</main>
 	);
 }

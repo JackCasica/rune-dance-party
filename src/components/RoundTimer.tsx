@@ -8,10 +8,6 @@ export const RoundTimer: React.FC<RoundTimerProps> = ({ game, turnCard, activeCa
 	const [progress, setProgress] = useState<number>(gameTimerProgress);
 	const { currentRound } = game.newGame
 
-	// useEffect(() => {
-	//   console.log(game);
-	// }, []);
-
 	useEffect(() => {
 		// ENSURES THE ROUND TIMER STAYS IN SYNC WITH GAME TIMER
 		setProgress(gameTimerProgress);
@@ -32,7 +28,7 @@ export const RoundTimer: React.FC<RoundTimerProps> = ({ game, turnCard, activeCa
 		if (progress % INTERVAL === 0 && progress < 59 && progress > 0) {
 			// new Audio(transition).play()
 			Rune.actions.checkPlayerPoses({ index: activeCardIndex });
-			Rune.actions.getStreak();
+			// Rune.actions.getStreak();
 			// console.log('checking player poses')
 			turnCard();
 			Rune.actions.incrementRoundNumber()
