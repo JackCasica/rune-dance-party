@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { StageCard } from "./StageCard";
-import { StageProps, Card } from "../types/types";
+import { StageProps, Card, Player } from "../types/types";
 import { RoundTimer } from "./RoundTimer";
 
-export const Stage: React.FC<StageProps> = ({ game, activeCardIndex, setActiveCardIndex }) => {
+export const Stage: React.FC<StageProps> = ({
+  game,
+  activeCardIndex,
+  setActiveCardIndex,
+}) => {
   const [stageCards, setStageCards] = useState<Card[]>(
     game.newGame.cardStack.slice(1)
   );
   const [activeCard, setActiveCard] = useState<Card>(game.newGame.cardStack[0]);
+  const { predictor } = game.newGame.players.find(
+    (player: Player) => player.playerId === game.yourPlayerId
+  );
   // const [activeCardIndex, setActiveCardIndex] = useState<number>(0);
-  
-	useEffect(() => {
-	  Rune.actions.updateActiveCard(0)
-	}, []);
+
+  useEffect(() => {
+    Rune.actions.updateActiveCard(0);
+  }, []);
 
   const turnCard = () => {
     if (stageCards.length > 0) {
@@ -51,6 +58,7 @@ export const Stage: React.FC<StageProps> = ({ game, activeCardIndex, setActiveCa
               active={true}
               color={activeCard.color}
               limbs={activeCard.limbs}
+              shown={true}
             />
           ) : (
             <> </>
@@ -67,13 +75,18 @@ export const Stage: React.FC<StageProps> = ({ game, activeCardIndex, setActiveCa
                 leftOffset={`${i * 10 + 2}px`}
                 z={`${stageCards.length - i}`}
                 limbs={cardItem.limbs}
+                shown={predictor}
               />
             </div>
           ))}
         </div>
       </div>
       <div id="round-timer">
-        <RoundTimer game={game} turnCard={turnCard} activeCardIndex={activeCardIndex} />
+        <RoundTimer
+          game={game}
+          turnCard={turnCard}
+          activeCardIndex={activeCardIndex}
+        />
       </div>
     </div>
   );

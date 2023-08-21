@@ -26,7 +26,8 @@ Rune.initLogic({
 				controlsOrder: ["Left Arm", "Right Arm", "Left Leg", "Right Leg"],
 				score: 0,
 				correctStreak: 0,
-				autoLimb: false
+				autoLimb: false,
+				predictor: false
 			})),
 		};
 	},
@@ -42,9 +43,7 @@ Rune.initLogic({
 		},
 
 		shuffleEnemyControls: (_, { game, playerId: initiatingPlayerId }) => {
-			// const playerIndex = game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId);
-			console.log('shuffling')
-			/* THIS ACTION SHUFFLES THE ORDER OF THE CONTROLS FOR ALL PLAYERS EXCEPT THE PLAYER WHO INITIATED THE ACTION */
+			// THIS ACTION SHUFFLES THE ORDER OF THE CONTROLS FOR ALL PLAYERS EXCEPT THE PLAYER WHO INITIATED THE ACTION
 			game.players.forEach((player) => {
 				if (player.playerId !== initiatingPlayerId) {
 					let possibleLimbs = ["Right Arm", "Left Leg", "Left Arm", "Right Leg"]
@@ -55,27 +54,25 @@ Rune.initLogic({
 					player.controlsOrder = possibleLimbs;
 				}
 			});
-			// Rune.actions.resetStreak();
 		},
-		
-		subtractStreak: (cost, { game, playerId: initiatingPlayerId }) => {
-			// console.log('resetting streak')
-			const playerIndex = game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId);
-			const initiatingPlayer = game.players[playerIndex];
-			initiatingPlayer.correctStreak -= cost
+
+		togglePredictor({ isActive }, { game, playerId: initiatingPlayerId}) {
+			const initiatingPlayer = game.players[game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId)];
+			initiatingPlayer.predictor = isActive
 		},
 		
 		toggleAutoLimb: ({ isActive, index }, { game, playerId: initiatingPlayerId }) => {
-			// console.log('auto limb is ' + `${isActive? 'ACTIVE' : 'INACTIVE'}`)
-			const playerIndex = game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId);
-			const initiatingPlayer = game.players[playerIndex];
+			const initiatingPlayer = game.players[game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId)];
 			initiatingPlayer.autoLimb = isActive
 
-			// MJP TODO: Why not work
 			if (isActive === true && index){
 				initiatingPlayer.limbs[LimbEnum.LeftArm] = game.cardStack[index].limbs[0];
-				initiatingPlayer.correctStreak = 0
 			}
+		},
+		
+		subtractStreak: (cost, { game, playerId: initiatingPlayerId }) => {
+			const initiatingPlayer = game.players[game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId)];
+			initiatingPlayer.correctStreak -= cost
 		},
 
 		toggleLimb: ({ limb }, { game, playerId: initiatingPlayerId }) => {
@@ -122,7 +119,9 @@ Rune.initLogic({
 		const timeElapsed = Rune.gameTimeInSeconds();
 		game.remainingTime = 60 - timeElapsed;
 		if (game.remainingTime === 0) {
-			new Audio(gameOverSound).play();
+			let gameOverAudio = new Audio(gameOverSound)
+			gameOverAudio.volume = 0.5 // original was so loud
+			gameOverAudio.play()
 			Rune.gameOver({
 				players: {
 					[game.players[0].playerId]: game.players[0].score,
