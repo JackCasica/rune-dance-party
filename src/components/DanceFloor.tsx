@@ -1,4 +1,5 @@
 import React from "react";
+
 import { DanceFloorProps } from "../types/types";
 
 export const DanceFloor: React.FC<DanceFloorProps> = ({ children }) => {

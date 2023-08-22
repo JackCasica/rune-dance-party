@@ -2,26 +2,26 @@ import React, { useEffect } from "react";
 
 import interfaceClick from "../assets/interface click.wav";
 import revealBonus from "../assets/reveal bonus.wav";
-import spellWaves from "../assets/spell waves.wav";
 import shuffle from "../assets/shuffle.wav";
+import spellWaves from "../assets/spell waves.wav";
 
 import type { ControlsProps, LimbControlsProps, PowerUpsProps, Player } from "../types/types";
 import { LimbEnum } from "../types/types";
 import { playSound } from "../util/playSound";
+import { useManagePowerups } from "../hooks/useManagePowerups";
 
 const Powerups: React.FC<PowerUpsProps> = ({ game, activeCardIndex }) => {
 	const { controlsOrder: oldControlsOrder } = game.oldGame.players.find(
 		(player: Player) => player.playerId === game.yourPlayerId
 	);
 
-	const { currentRound: oldRound } = game.oldGame;
-	const { currentRound } = game.newGame;
+	useManagePowerups(game);
 
 	const { correctStreak, controlsOrder } = game.newGame.players.find(
 		(player: Player) => player.playerId === game.yourPlayerId
 	);
 
-	const onClickHandler = (powerup: string, audio: string, cost: number) => {
+	const runPowerup = (powerup: string, audio: string, cost: number) => {
 		if (correctStreak >= cost) {
 			playSound(audio);
 			switch (powerup) {
@@ -35,17 +35,10 @@ const Powerups: React.FC<PowerUpsProps> = ({ game, activeCardIndex }) => {
 					Rune.actions.toggleAutoLimb({ isActive: true, index: activeCardIndex });
 					break;
 			}
+
 			Rune.actions.subtractStreak(cost);
 		}
 	};
-
-	useEffect(() => {
-		// activates at round turnover
-		if (oldRound !== currentRound) {
-			Rune.actions.toggleAutoLimb({ isActive: false });
-			Rune.actions.togglePredictor({ isActive: false });
-		}
-	}, [oldRound, currentRound]);
 
 	useEffect(() => {
 		if (
@@ -66,7 +59,7 @@ const Powerups: React.FC<PowerUpsProps> = ({ game, activeCardIndex }) => {
 		<div className="flex justify-center items-end h-14">
 			<button
 				onClick={() => {
-					onClickHandler("shuffle", shuffle, 1);
+					runPowerup("shuffle", shuffle, 1);
 				}}
 				className={`border-black flex items-center justify-center relative p-0 w-3/4 h-3/4 text-s font-black rounded-xl border-4 hover:cursor-pointer ${
 					correctStreak ? "border-black bg-white" : "border-stone-400 bg-white/20"
@@ -76,7 +69,7 @@ const Powerups: React.FC<PowerUpsProps> = ({ game, activeCardIndex }) => {
 			</button>
 			<button
 				onClick={() => {
-					onClickHandler("predictor", revealBonus, 1);
+					runPowerup("predictor", revealBonus, 1);
 				}}
 				className={`border-black flex items-center justify-center relative p-0 w-3/4 h-3/4 text-s font-black rounded-xl border-4 hover:cursor-pointer ${
 					correctStreak ? "border-black bg-white" : "border-stone-400 bg-white/20"
@@ -86,7 +79,7 @@ const Powerups: React.FC<PowerUpsProps> = ({ game, activeCardIndex }) => {
 			</button>
 			<button
 				onClick={() => {
-					onClickHandler("autoLimb", revealBonus, 2);
+					runPowerup("autoLimb", revealBonus, 2);
 				}}
 				className={`border-black flex items-center justify-center relative p-0 w-3/4 h-3/4 text-s font-black rounded-xl border-4 hover:cursor-pointer ${
 					correctStreak > 1 ? "border-black bg-white" : "border-stone-400 bg-white/20"
