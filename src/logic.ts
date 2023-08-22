@@ -7,6 +7,8 @@ declare global {
 	const Rune: RuneClient<GameState, GameActions>;
 }
 
+const playerColors: string[] = ['pink', 'purple', 'orange', 'yellow']
+
 Rune.initLogic({
 	minPlayers: 4 /* TEMPORARILY SET TO SHOW AUTOMATICALLY SHOW 4 DEVICES DURING DEVELOPMENT, BUT WILL ULTIMATELY SET TO 1 */,
 	maxPlayers: 4,
@@ -22,7 +24,7 @@ Rune.initLogic({
 			players: playerIds.map((playerId, i) => ({
 				key: playerId,
 				playerId: playerId,
-				playerColor: generateColor(),
+				playerColor: playerColors[i],
 				limbs: [1, 1, 1, 1],
 				controlsOrder: ["Left Arm", "Right Arm", "Left Leg", "Right Leg"],
 				score: 0,
