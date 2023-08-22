@@ -24,9 +24,7 @@ export const Stage: React.FC<StageProps> = ({
   const turnCard = () => {
     if (stageCards.length > 0) {
       // WHEN THE ROUND ENDS, SCORE THE PREVIOUS CARD'S POSES
-      // Rune.actions.checkPlayerPoses({ index: activeCardIndex });
       // THEN TURN TO THE NEW CARD (this triggers the useEffect below)
-      // Rune.actions.updateActiveCard(activeCardIndex + 1)
       setActiveCardIndex((prev: number) => prev + 1);
     }
   };
@@ -35,7 +33,7 @@ export const Stage: React.FC<StageProps> = ({
     // TRIGGERED BY THE ACTIVE CARD INDEX CHANGING (skips initial render tho)
     if (activeCardIndex > 0) {
       setActiveCard(stageCards[0]);
-      setStageCards((prev) => prev.slice(1));
+      setStageCards((prev) => prev.slice(1))
       // console.log("after active card removed: " + stageCards.length);
     }
   }, [activeCardIndex]);

@@ -18,10 +18,3 @@ export const generateCardStack = (totalCards: number): Card[] => {
   }
   return stack;
 };
-
-export const generateColor = (): string => {
-    const possibleColors = ["pink", "purple", "orange", "yellow"];
-    const i = Math.floor(Math.random() * 4);
-    return possibleColors[i];
-  };
-  

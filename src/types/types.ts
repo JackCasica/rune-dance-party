@@ -22,7 +22,6 @@ export type ControlsProps = {
 	player?: Player;
 	yourPlayerId?: string;
 	activeCardIndex: number;
-	setActiveCardIndex: Function;
 };
 
 export type DanceFloorProps = {
@@ -121,7 +120,6 @@ export type PowerUpsProps = {
 	game?: any;
 	player?: Player;
 	activeCardIndex: number;
-	setActiveCardIndex: Function;
 };
 
 export type LimbControlsProps = {

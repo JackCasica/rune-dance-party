@@ -9,14 +9,14 @@ import { Timer } from "./components/Timer.tsx";
 import { useState } from "react";
 
 function App() {
-    const [activeCardIndex, setActiveCardIndex] = useState<number>(0)
-	/* THIS IS THE GAME DATA FROM SERVER. PASS THIS TO COMPONENTS THAT NEED GAME STATE DATA, ETC */
+    /* THIS IS THE GAME DATA FROM SERVER. PASS THIS TO COMPONENTS THAT NEED GAME STATE DATA, ETC */
 	const game = useGame();
-
+    
 	/* GUARD CLAUSE PREVENTS RENDERING OUT GAME UI IF GAME ISN'T READY */
 	if (!game) {
-		return;
+        return;
 	}
+    const [activeCardIndex, setActiveCardIndex] = useState<number>(0)
 
 	// useEffect(() => {
 	//   const thisPlayer = game.newGame.players.find((player: Player) => player.playerId === game.playerId);
@@ -41,7 +41,7 @@ function App() {
 					/>
 				))}
 			</DanceFloor>
-			<Controls game={game} activeCardIndex={activeCardIndex} setActiveCardIndex={setActiveCardIndex} />
+			<Controls game={game} activeCardIndex={activeCardIndex} />
 		</main>
 	);
 }

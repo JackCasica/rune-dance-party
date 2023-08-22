@@ -1,6 +1,6 @@
 import type { RuneClient } from "rune-games-sdk/multiplayer";
 import { GameState, GameActions, Player, LimbEnum } from "./types/types";
-import { generateCardStack, generateColor } from "./util/generateCardStack.ts";
+import { generateCardStack } from "./util/generateCardStack.ts";
 import gameOverSound from "./assets/game over.wav";
 
 declare global {
@@ -18,7 +18,19 @@ Rune.initLogic({
 			currentPlayerIndex: 0,
 			remainingTime: 60, // Should be 60 seconds for production
 			currentRound: 1,
-			cardStack: generateCardStack(10),
+			// cardStack: generateCardStack(10),
+			cardStack: [
+				{color: 'pink', limbs:   [1,3,1,2]},
+				{color: 'yellow', limbs: [2,1,2,3]},
+				{color: 'purple', limbs: [3,1,2,2]},
+				{color: 'pink', limbs:   [2,2,3,1]},
+				{color: 'yellow', limbs: [2,3,1,1]},
+				{color: 'orange', limbs: [3,2,1,2]},
+				{color: 'yellow', limbs: [2,2,2,3]},
+				{color: 'purple', limbs: [1,3,3,2]},
+				{color: 'orange', limbs: [1,2,1,1]},
+				{color: 'pink', limbs:   [2,1,3,2]},
+			  ],
 			activeCard: null,
 			winner: null,
 			players: playerIds.map((playerId, i) => ({
