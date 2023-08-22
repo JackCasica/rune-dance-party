@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { RoundTimerProps } from "../types/types";
+
 import pageTurn from "../assets/page turn.wav";
+import { RoundTimerProps } from "../types/types";
 import { playSound } from "../util/playSound";
 
 export const RoundTimer: React.FC<RoundTimerProps> = ({ game, turnCard, activeCardIndex }) => {
@@ -29,7 +30,7 @@ export const RoundTimer: React.FC<RoundTimerProps> = ({ game, turnCard, activeCa
 		if (progress % INTERVAL === 0 && progress < 59 && progress > 0) {
 			Rune.actions.checkPlayerPoses({ index: activeCardIndex });
 			// Rune.actions.getStreak();
-			// console.log('checking player poses')
+
 			turnCard();
 			Rune.actions.incrementRoundNumber();
 			playSound(pageTurn);
