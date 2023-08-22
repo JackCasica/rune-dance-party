@@ -18,32 +18,39 @@ function App() {
 	}
     const [activeCardIndex, setActiveCardIndex] = useState<number>(0)
 
-	// useEffect(() => {
-	//   const thisPlayer = game.newGame.players.find((player: Player) => player.playerId === game.playerId);
-	//   setThisPlayer(thisPlayer);
-	// }, [game]);
+  // useEffect(() => {
+  //   const thisPlayer = game.newGame.players.find((player: Player) => player.playerId === game.playerId);
+  //   setThisPlayer(thisPlayer);
+  // }, [game]);
 
-	// game.newGame.players.forEach((player: Player, index: number) => {
-	// 	console.log(index, player.controlsOrder, `🔴`);
-	// });
+  // game.newGame.players.forEach((player: Player, index: number) => {
+  // 	console.log(index, player.controlsOrder, `🔴`);
+  // });
 
-	/* RENDERING OUT GAME UI IF THE GAME IS READY */
-	return (
-		<main className="flex flex-col items-center justify-center w-full h-screen gap-4 p-8 bg-brilliant-azure ">
-			<Timer game={game} />
-			<Stage game={game} activeCardIndex={activeCardIndex} setActiveCardIndex={setActiveCardIndex} />
-			<DanceFloor>
-				{game.newGame.players.map((player: Player) => (
-					<Character
-						key={player.playerId}
-						playerName={game.players[player.playerId].displayName}
-						player={player}
-					/>
-				))}
-			</DanceFloor>
-			<Controls game={game} activeCardIndex={activeCardIndex} />
-		</main>
-	);
+  /* RENDERING OUT GAME UI IF THE GAME IS READY */
+  return (
+    <main className="flex flex-col items-center justify-center w-full h-screen gap-4 p-8 bg-brilliant-azure ">
+      <Timer game={game} />
+      <Stage
+        game={game}
+        activeCardIndex={activeCardIndex}
+        setActiveCardIndex={setActiveCardIndex}
+      />
+      <DanceFloor>
+        {game.newGame.players.map((player: Player) => (
+          <Character
+            key={player.playerId}
+            playerName={game.players[player.playerId].displayName}
+            player={player}
+          />
+        ))}
+      </DanceFloor>
+      <Controls
+        game={game}
+        activeCardIndex={activeCardIndex}
+      />
+    </main>
+  );
 }
 
 export default App;

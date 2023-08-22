@@ -1,20 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { StageCard } from "./StageCard";
-import { StageProps, Card, Player } from "../types/types";
-import { RoundTimer } from "./RoundTimer";
+import React, { useEffect, useState } from "react";
 
-export const Stage: React.FC<StageProps> = ({
-  game,
-  activeCardIndex,
-  setActiveCardIndex,
-}) => {
-  const [stageCards, setStageCards] = useState<Card[]>(
-    game.newGame.cardStack.slice(1)
-  );
+import { Card, Player, StageProps } from "../types/types";
+import { RoundTimer } from "./RoundTimer";
+import { StageCard } from "./StageCard";
+
+export const Stage: React.FC<StageProps> = ({ game, activeCardIndex, setActiveCardIndex }) => {
+  const [stageCards, setStageCards] = useState<Card[]>(game.newGame.cardStack.slice(1));
   const [activeCard, setActiveCard] = useState<Card>(game.newGame.cardStack[0]);
-  const { predictor } = game.newGame.players.find(
-    (player: Player) => player.playerId === game.yourPlayerId
-  );
+  const { predictor } = game.newGame.players.find((player: Player) => player.playerId === game.yourPlayerId);
   // const [activeCardIndex, setActiveCardIndex] = useState<number>(0);
 
   useEffect(() => {
@@ -43,12 +36,13 @@ export const Stage: React.FC<StageProps> = ({
       id="stage"
       className="flex flex-col w-full pt-4 px-4 bg-orange-500 border-4 border-orange-700 border-solid rounded-xl h-fit"
     >
-      <div id="cards" className="flex">
+      <div
+        id="cards"
+        className="flex"
+      >
         <div
           id="active-card"
-          className={`mr-10 w-10 h-14 ${
-            activeCard || "border-4 border-white border-dashed rounded-xl"
-          }`}
+          className={`mr-10 w-10 h-14 ${activeCard || "border-4 border-white border-dashed rounded-xl"}`}
           style={{ width: "20vw", height: "25vw" }}
         >
           {activeCard ? (
