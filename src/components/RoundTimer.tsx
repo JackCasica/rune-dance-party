@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { RoundTimerProps } from "../types/types";
 import pageTurn from "../assets/page turn.wav";
+import { playSound } from "../util/playSound";
 
 export const RoundTimer: React.FC<RoundTimerProps> = ({ game, turnCard, activeCardIndex }) => {
 	const INTERVAL = 6; // THIS IS THE AMOUNT OF TIME IN A ROUND, IN SECONDS
 	const gameTimerProgress = 60 - game.newGame.remainingTime;
 	const [progress, setProgress] = useState<number>(gameTimerProgress);
-	const { currentRound } = game.newGame
+	const { currentRound } = game.newGame;
 
 	useEffect(() => {
 		// ENSURES THE ROUND TIMER STAYS IN SYNC WITH GAME TIMER
@@ -26,13 +27,12 @@ export const RoundTimer: React.FC<RoundTimerProps> = ({ game, turnCard, activeCa
 		// IF THE ROUND TIMER BAR IS STARTING OVER
 		// THEN SCORE & TURN THE NEXT CARD OVER
 		if (progress % INTERVAL === 0 && progress < 59 && progress > 0) {
-			// new Audio(transition).play()
 			Rune.actions.checkPlayerPoses({ index: activeCardIndex });
 			// Rune.actions.getStreak();
 			// console.log('checking player poses')
 			turnCard();
-			Rune.actions.incrementRoundNumber()
-			new Audio(pageTurn).play();
+			Rune.actions.incrementRoundNumber();
+			playSound(pageTurn);
 		}
 	}, [progress]);
 

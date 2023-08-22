@@ -2,13 +2,14 @@ import type { RuneClient } from "rune-games-sdk/multiplayer";
 import { GameState, GameActions, Player, LimbEnum } from "./types/types";
 import { generateCardStack } from "./util/generateCardStack.ts";
 import gameOverSound from "./assets/game over.wav";
+import { playSound } from "./util/playSound.ts";
 
 declare global {
 	const Rune: RuneClient<GameState, GameActions>;
 }
 
 Rune.initLogic({
-	minPlayers: 4 /* TEMPORARILY SET TO SHOW AUTOMATICALLY SHOW 4 DEVICES DURING DEVELOPMENT, BUT WILL ULTIMATELY SET TO 1 */,
+	minPlayers: 1 /* TEMPORARILY SET TO SHOW AUTOMATICALLY SHOW 4 DEVICES DURING DEVELOPMENT, BUT WILL ULTIMATELY SET TO 1 */,
 	maxPlayers: 4,
 	setup: (playerIds): GameState => {
 		return {
@@ -27,7 +28,7 @@ Rune.initLogic({
 				score: 0,
 				correctStreak: 0,
 				autoLimb: false,
-				predictor: false
+				predictor: false,
 			})),
 		};
 	},
@@ -35,44 +36,47 @@ Rune.initLogic({
 		/* FIRST ARGUMENT IS A PAYLOAD, USE "_", WHEN PAYLOAD ISNT REQUIRED AND YOU STILL WANT TO ACCESS THE SECOND ARGUMENT. AS A SECOND ARGUMENT, EACH ACTION GETS ACCESS TO AN OBJECT CONTAINING THE CURRENT GAME STATE, THE PLAYER ID OF THE PLAYER INITIATING THE ACTION, AND AN ARRAY OF ALL PLAYER IDS. */
 
 		incrementRoundNumber: (_, { game }) => {
-			game.currentRound++
+			game.currentRound++;
 		},
 
 		updateActiveCard: (index, { game }) => {
-			game.activeCard = game.cardStack[index]
+			game.activeCard = game.cardStack[index];
 		},
 
 		shuffleEnemyControls: (_, { game, playerId: initiatingPlayerId }) => {
 			// THIS ACTION SHUFFLES THE ORDER OF THE CONTROLS FOR ALL PLAYERS EXCEPT THE PLAYER WHO INITIATED THE ACTION
 			game.players.forEach((player) => {
 				if (player.playerId !== initiatingPlayerId) {
-					let possibleLimbs = ["Right Arm", "Left Leg", "Left Arm", "Right Leg"]
-					for (let i = 2; i>0; i--){
+					let possibleLimbs = ["Right Arm", "Left Leg", "Left Arm", "Right Leg"];
+					for (let i = 2; i > 0; i--) {
 						const j = Math.floor(Math.random() * (i + 1));
-						[possibleLimbs[i], possibleLimbs[j]] = [possibleLimbs[j], possibleLimbs[i]]
+						[possibleLimbs[i], possibleLimbs[j]] = [possibleLimbs[j], possibleLimbs[i]];
 					}
 					player.controlsOrder = possibleLimbs;
 				}
 			});
 		},
 
-		togglePredictor({ isActive }, { game, playerId: initiatingPlayerId}) {
-			const initiatingPlayer = game.players[game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId)];
-			initiatingPlayer.predictor = isActive
+		togglePredictor({ isActive }, { game, playerId: initiatingPlayerId }) {
+			const initiatingPlayer =
+				game.players[game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId)];
+			initiatingPlayer.predictor = isActive;
 		},
-		
-		toggleAutoLimb: ({ isActive, index }, { game, playerId: initiatingPlayerId }) => {
-			const initiatingPlayer = game.players[game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId)];
-			initiatingPlayer.autoLimb = isActive
 
-			if (isActive === true && index){
+		toggleAutoLimb: ({ isActive, index }, { game, playerId: initiatingPlayerId }) => {
+			const initiatingPlayer =
+				game.players[game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId)];
+			initiatingPlayer.autoLimb = isActive;
+
+			if (isActive === true && index) {
 				initiatingPlayer.limbs[LimbEnum.LeftArm] = game.cardStack[index].limbs[0];
 			}
 		},
-		
+
 		subtractStreak: (cost, { game, playerId: initiatingPlayerId }) => {
-			const initiatingPlayer = game.players[game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId)];
-			initiatingPlayer.correctStreak -= cost
+			const initiatingPlayer =
+				game.players[game.players.findIndex((player: Player) => player.playerId === initiatingPlayerId)];
+			initiatingPlayer.correctStreak -= cost;
 		},
 
 		toggleLimb: ({ limb }, { game, playerId: initiatingPlayerId }) => {
@@ -119,9 +123,7 @@ Rune.initLogic({
 		const timeElapsed = Rune.gameTimeInSeconds();
 		game.remainingTime = 60 - timeElapsed;
 		if (game.remainingTime === 0) {
-			let gameOverAudio = new Audio(gameOverSound)
-			gameOverAudio.volume = 0.5 // original was so loud
-			gameOverAudio.play()
+			playSound(gameOverSound);
 			Rune.gameOver({
 				players: {
 					[game.players[0].playerId]: game.players[0].score,
