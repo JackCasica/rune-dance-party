@@ -9,14 +9,14 @@ import { Timer } from "./components/Timer.tsx";
 import { useState } from "react";
 
 function App() {
-    /* THIS IS THE GAME DATA FROM SERVER. PASS THIS TO COMPONENTS THAT NEED GAME STATE DATA, ETC */
-	const game = useGame();
-    
-	/* GUARD CLAUSE PREVENTS RENDERING OUT GAME UI IF GAME ISN'T READY */
-	if (!game) {
-        return;
-	}
-    const [activeCardIndex, setActiveCardIndex] = useState<number>(0)
+  /* THIS IS THE GAME DATA FROM SERVER. PASS THIS TO COMPONENTS THAT NEED GAME STATE DATA, ETC */
+  const game = useGame();
+  const [activeCardIndex, setActiveCardIndex] = useState<number>(0);
+
+  /* GUARD CLAUSE PREVENTS RENDERING OUT GAME UI IF GAME ISN'T READY */
+  if (!game) {
+    return;
+  }
 
   // useEffect(() => {
   //   const thisPlayer = game.newGame.players.find((player: Player) => player.playerId === game.playerId);
@@ -29,7 +29,7 @@ function App() {
 
   /* RENDERING OUT GAME UI IF THE GAME IS READY */
   return (
-    <main className="flex flex-col items-center justify-center w-full h-screen gap-4 p-8 bg-brilliant-azure ">
+    <main className="flex h-screen w-full flex-col items-center justify-center gap-4 bg-brilliant-azure p-8 ">
       <Timer game={game} />
       <Stage
         game={game}
@@ -45,10 +45,7 @@ function App() {
           />
         ))}
       </DanceFloor>
-      <Controls
-        game={game}
-        activeCardIndex={activeCardIndex}
-      />
+      <Controls game={game} activeCardIndex={activeCardIndex} />
     </main>
   );
 }
