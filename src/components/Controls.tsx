@@ -167,19 +167,12 @@ const LimbControls: React.FC<LimbControlsProps> = ({ game }) => {
   );
 };
 
-export const Controls: React.FC<ControlsProps> = ({
-  game,
-  activeCardIndex,
-  setActiveCardIndex,
-}) => {
+export const Controls: React.FC<ControlsProps> = ({ game, activeCardIndex }) => {
   /* RENDERING OUT THE BOTTOM CONTROLS INCLUDING THE POWERS UPS, AND LIMB CONTROLS */
   return (
     <div className="flex-col">
-      <Powerups
-        game={game}
-        activeCardIndex={activeCardIndex}
-        setActiveCardIndex={setActiveCardIndex}
-      />
+      <Powerups game={game} 
+        activeCardIndex={activeCardIndex} />
       <LimbControls game={game} />
     </div>
   );

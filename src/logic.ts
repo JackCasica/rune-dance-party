@@ -8,36 +8,50 @@ declare global {
   const Rune: RuneClient<GameState, GameActions>;
 }
 
-Rune.initLogic({
-  minPlayers: 1 /* TEMPORARILY SET TO SHOW AUTOMATICALLY SHOW 4 DEVICES DURING DEVELOPMENT, BUT WILL ULTIMATELY SET TO 1 */,
-  maxPlayers: 4,
-  setup: (playerIds): GameState => {
-    return {
-      count: 0,
-      currentPlayerIndex: 0,
-      remainingTime: 60, // Should be 60 seconds for production
-      currentRound: 1,
-      cardStack: generateCardStack(10),
-      activeCard: null,
-      winner: null,
-      players: playerIds.map((playerId) => ({
-        key: playerId,
-        playerId: playerId,
-        limbs: [1, 1, 1, 1],
-        controlsOrder: ["Left Arm", "Right Arm", "Left Leg", "Right Leg"],
-        score: 0,
-        correctStreak: 0,
-        autoLimb: false,
-        predictor: false,
-      })),
-    };
-  },
-  actions: {
-    /* FIRST ARGUMENT IS A PAYLOAD, USE "_", WHEN PAYLOAD ISNT REQUIRED AND YOU STILL WANT TO ACCESS THE SECOND ARGUMENT. AS A SECOND ARGUMENT, EACH ACTION GETS ACCESS TO AN OBJECT CONTAINING THE CURRENT GAME STATE, THE PLAYER ID OF THE PLAYER INITIATING THE ACTION, AND AN ARRAY OF ALL PLAYER IDS. */
+const playerColors: string[] = ['pink', 'purple', 'orange', 'yellow']
 
-    incrementRoundNumber: (_, { game }) => {
-      game.currentRound++;
-    },
+Rune.initLogic({
+	minPlayers: 4 /* TEMPORARILY SET TO SHOW AUTOMATICALLY SHOW 4 DEVICES DURING DEVELOPMENT, BUT WILL ULTIMATELY SET TO 1 */,
+	maxPlayers: 4,
+	setup: (playerIds): GameState => {
+		return {
+			count: 0,
+			currentPlayerIndex: 0,
+			remainingTime: 60, // Should be 60 seconds for production
+			currentRound: 1,
+			// cardStack: generateCardStack(10),
+			cardStack: [
+				{color: 'pink', limbs:   [1,3,1,2]},
+				{color: 'yellow', limbs: [2,1,2,3]},
+				{color: 'purple', limbs: [3,1,2,2]},
+				{color: 'pink', limbs:   [2,2,3,1]},
+				{color: 'yellow', limbs: [2,3,1,1]},
+				{color: 'orange', limbs: [3,2,1,2]},
+				{color: 'yellow', limbs: [2,2,2,3]},
+				{color: 'purple', limbs: [1,3,3,2]},
+				{color: 'orange', limbs: [1,2,1,1]},
+				{color: 'pink', limbs:   [2,1,3,2]},
+			  ],
+			activeCard: null,
+			winner: null,
+			players: playerIds.map((playerId, i) => ({
+				key: playerId,
+				playerId: playerId,
+				playerColor: playerColors[i],
+				limbs: [1, 1, 1, 1],
+				controlsOrder: ["Left Arm", "Right Arm", "Left Leg", "Right Leg"],
+				score: 0,
+				correctStreak: 0,
+				autoLimb: false,
+				predictor: false
+			})),
+		};
+	},
+	actions: {
+		/* FIRST ARGUMENT IS A PAYLOAD, USE "_", WHEN PAYLOAD ISNT REQUIRED AND YOU STILL WANT TO ACCESS THE SECOND ARGUMENT. AS A SECOND ARGUMENT, EACH ACTION GETS ACCESS TO AN OBJECT CONTAINING THE CURRENT GAME STATE, THE PLAYER ID OF THE PLAYER INITIATING THE ACTION, AND AN ARRAY OF ALL PLAYER IDS. */
+		incrementRoundNumber: (_, { game }) => {
+			game.currentRound++
+		},
 
     updateActiveCard: (index, { game }) => {
       game.activeCard = game.cardStack[index];
