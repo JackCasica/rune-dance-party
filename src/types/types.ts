@@ -11,7 +11,7 @@ export type StageCardProps = {
 	leftOffset?: string;
 	z?: string;
 	active?: boolean;
-	limbs?: number[];
+	limbs: number[];
 	shown: boolean;
   };
 
@@ -56,6 +56,7 @@ export enum LimbPose {
 
 export type Player = {
 	playerId: string;
+	playerColor: string;
 	score: number;
 	index?: number;
 	limbs: LimbEnum[];

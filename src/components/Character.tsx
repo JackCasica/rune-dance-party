@@ -35,7 +35,8 @@ const Limb: React.FC<LimbProps> = ({ limb, player }) => {
 
 	return (
 		<div className={`absolute font-black text-xl ${position} w-3/4 aspect-square`}>
-			{player.limbs[limb]} {/* Remove for production; just helps match numbers during development */}
+			{/* Remove for production; just helps match numbers during development */}
+			{/* {player.limbs[limb]}  */}
 			<img
 				src={`/limbs/${limbType}Pose=0.png`}
 				className={`${limbType === "LeftArm" && autoLimb && 'invert'} absolute ${player.limbs[limb] === 1 ? "opacity-100" : "opacity-0"}`}
@@ -53,11 +54,12 @@ const Limb: React.FC<LimbProps> = ({ limb, player }) => {
 };
 
 const Body: React.FC<BodyProps> = ({ children, player }) => {
+	const { playerColor } = player
 	return (
-		<div className="relative flex items-center w-1/2 justify-center  rounded-full bg-black/0">
+		<div className="relative flex items-center w-1/2 justify-center rounded-full bg-black/0">
 			<img
-				src="/limbs/torso.png"
-				className=""
+				src={`/limbs/torso-${playerColor}.png`}
+				className="z-10"
 			/>
 			{React.Children.map(children, (child) => {
 				if (React.isValidElement(child)) {

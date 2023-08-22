@@ -1,6 +1,6 @@
 import type { RuneClient } from "rune-games-sdk/multiplayer";
 import { GameState, GameActions, Player, LimbEnum } from "./types/types";
-import { generateCardStack } from "./util/generateCardStack.ts";
+import { generateCardStack, generateColor } from "./util/generateCardStack.ts";
 import gameOverSound from "./assets/game over.wav";
 
 declare global {
@@ -19,9 +19,10 @@ Rune.initLogic({
 			cardStack: generateCardStack(10),
 			activeCard: null,
 			winner: null,
-			players: playerIds.map((playerId) => ({
+			players: playerIds.map((playerId, i) => ({
 				key: playerId,
 				playerId: playerId,
+				playerColor: generateColor(),
 				limbs: [1, 1, 1, 1],
 				controlsOrder: ["Left Arm", "Right Arm", "Left Leg", "Right Leg"],
 				score: 0,
@@ -33,7 +34,6 @@ Rune.initLogic({
 	},
 	actions: {
 		/* FIRST ARGUMENT IS A PAYLOAD, USE "_", WHEN PAYLOAD ISNT REQUIRED AND YOU STILL WANT TO ACCESS THE SECOND ARGUMENT. AS A SECOND ARGUMENT, EACH ACTION GETS ACCESS TO AN OBJECT CONTAINING THE CURRENT GAME STATE, THE PLAYER ID OF THE PLAYER INITIATING THE ACTION, AND AN ARRAY OF ALL PLAYER IDS. */
-
 		incrementRoundNumber: (_, { game }) => {
 			game.currentRound++
 		},
