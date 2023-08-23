@@ -9,33 +9,24 @@ import { Timer } from "./components/Timer.tsx";
 import { useState } from "react";
 
 function App() {
+  const [activeCardIndex, setActiveCardIndex] = useState<number>(0);
   /* THIS IS THE GAME DATA FROM SERVER. PASS THIS TO COMPONENTS THAT NEED GAME STATE DATA, ETC */
   const game = useGame();
-  const [activeCardIndex, setActiveCardIndex] = useState<number>(0);
 
   /* GUARD CLAUSE PREVENTS RENDERING OUT GAME UI IF GAME ISN'T READY */
   if (!game) {
     return;
   }
 
-  // useEffect(() => {
-  //   const thisPlayer = game.newGame.players.find((player: Player) => player.playerId === game.playerId);
-  //   setThisPlayer(thisPlayer);
-  // }, [game]);
-
-  // game.newGame.players.forEach((player: Player, index: number) => {
-  // 	console.log(index, player.controlsOrder, `🔴`);
-  // });
-
   /* RENDERING OUT GAME UI IF THE GAME IS READY */
   return (
-    <main className="flex h-screen w-full flex-col items-center justify-center gap-4 bg-brilliant-azure p-8 ">
+    <main className="flex h-screen w-full flex-col justify-between gap-4 bg-brilliant-azure p-4">
       <Stage
         game={game}
         activeCardIndex={activeCardIndex}
         setActiveCardIndex={setActiveCardIndex}
       />
-      <DanceFloor>
+      <DanceFloor game={game}>
         {game.newGame.players.map((player: Player) => (
           <Character
             key={player.playerId}

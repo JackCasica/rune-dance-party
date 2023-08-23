@@ -64,15 +64,13 @@ const Powerups: React.FC<PowerUpsProps> = ({ game, activeCardIndex }) => {
   }, [correctStreak]);
 
   return (
-    <div className="flex h-14 items-end justify-center">
+    <div className="flex h-fit gap-2 bg-black/0">
       <button
         onClick={() => {
           runPowerup("shuffle", shuffle, 1);
         }}
-        className={`text-s relative flex h-3/4 w-3/4 items-center justify-center rounded-xl border-4 border-black p-0 font-black hover:cursor-pointer ${
-          correctStreak
-            ? "border-black bg-white"
-            : "border-stone-400 bg-white/20"
+        className={`relative flex  w-3/4 items-center justify-center rounded-3xl border-8 border-black p-2 text-sm font-black hover:cursor-pointer ${
+          correctStreak ? " bg-white" : " bg-white/20"
         }`}
       >
         Shuffle
@@ -81,10 +79,8 @@ const Powerups: React.FC<PowerUpsProps> = ({ game, activeCardIndex }) => {
         onClick={() => {
           runPowerup("predictor", revealBonus, 1);
         }}
-        className={`text-s relative flex h-3/4 w-3/4 items-center justify-center rounded-xl border-4 border-black p-0 font-black hover:cursor-pointer ${
-          correctStreak
-            ? "border-black bg-white"
-            : "border-stone-400 bg-white/20"
+        className={`relative flex  w-3/4 items-center justify-center rounded-3xl border-8 border-black p-2 text-sm font-black hover:cursor-pointer ${
+          correctStreak ? " bg-white" : " bg-white/20"
         }`}
       >
         Predictor
@@ -93,10 +89,8 @@ const Powerups: React.FC<PowerUpsProps> = ({ game, activeCardIndex }) => {
         onClick={() => {
           runPowerup("autoLimb", revealBonus, 2);
         }}
-        className={`text-s relative flex h-3/4 w-3/4 items-center justify-center rounded-xl border-4 border-black p-0 font-black hover:cursor-pointer ${
-          correctStreak > 1
-            ? "border-black bg-white"
-            : "border-stone-400 bg-white/20"
+        className={`relative flex  w-3/4 items-center justify-center rounded-3xl border-8 border-black p-2 text-sm font-black hover:cursor-pointer ${
+          correctStreak > 1 ? " bg-white" : " bg-white/20"
         }`}
       >
         Auto Limb
@@ -129,15 +123,15 @@ const LimbControls: React.FC<LimbControlsProps> = ({ game }) => {
 
   /* RENDERING OUT THE FOUR LIMB CONTROLS */
   return (
-    <div className="flex h-3/4 w-full overflow-clip rounded-3xl border-8 border-black bg-black ">
+    <div className="flex h-3/4 w-full overflow-clip rounded-3xl border-8 border-black bg-black/0">
       {controlsOrder.map((control: string) => {
         const buttonColor = controlColors[control];
 
         return (
           <button
             key={control}
-            className={`relative h-full w-full rounded-none bg-black/10 px-10 py-6
-              text-xs font-black transition-all hover:opacity-90
+            className={`relative h-full w-full rounded-none bg-black/0
+              p-8 text-xs font-black transition-all hover:opacity-90
               ${
                 autoLimb && control === "Left Arm"
                   ? "bg-slate-400"
@@ -157,7 +151,7 @@ const LimbControls: React.FC<LimbControlsProps> = ({ game }) => {
           >
             <img
               src={`/limb controls/${control} Control.png`}
-              className={`absolute left-0 top-0 p-2`}
+              className={`absolute left-1/2 top-1/2 w-3/4 -translate-x-1/2 -translate-y-1/2 p-2`}
             />
             {/* {control} */}
           </button>
@@ -167,12 +161,14 @@ const LimbControls: React.FC<LimbControlsProps> = ({ game }) => {
   );
 };
 
-export const Controls: React.FC<ControlsProps> = ({ game, activeCardIndex }) => {
+export const Controls: React.FC<ControlsProps> = ({
+  game,
+  activeCardIndex,
+}) => {
   /* RENDERING OUT THE BOTTOM CONTROLS INCLUDING THE POWERS UPS, AND LIMB CONTROLS */
   return (
-    <div className="flex-col">
-      <Powerups game={game} 
-        activeCardIndex={activeCardIndex} />
+    <div className=" flex w-full flex-col gap-2  bg-black/0">
+      <Powerups game={game} activeCardIndex={activeCardIndex} />
       <LimbControls game={game} />
     </div>
   );
