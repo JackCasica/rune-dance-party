@@ -30,7 +30,6 @@ function App() {
   /* RENDERING OUT GAME UI IF THE GAME IS READY */
   return (
     <main className="flex h-screen w-full flex-col items-center justify-center gap-4 bg-brilliant-azure p-8 ">
-      <Timer game={game} />
       <Stage
         game={game}
         activeCardIndex={activeCardIndex}
