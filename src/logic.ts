@@ -34,6 +34,7 @@ Rune.initLogic({
         { color: "pink", limbs: [2, 1, 3, 2] },
       ],
       activeCard: null,
+
       winner: null,
       players: playerIds.map((playerId, i) => ({
         key: playerId,
@@ -41,6 +42,7 @@ Rune.initLogic({
         playerColor: playerColors[i],
         limbs: [1, 1, 1, 1],
         controlsOrder: ["Left Arm", "Right Arm", "Left Leg", "Right Leg"],
+        scoreForRound: 0,
         score: 0,
         correctStreak: 0,
         autoLimb: false,
@@ -135,11 +137,9 @@ Rune.initLogic({
         (player: Player) => player.playerId === initiatingPlayerId,
       );
       const player = game.players[playerIndex];
-      // game.activeCard = game.cardStack[index]
-      // const activeCard = game.cardStack[index];
       const playerLimbPoses = player.limbs;
 
-      const score = playerLimbPoses.reduce((acc, limbPose, i) => {
+      const scoreForRound = playerLimbPoses.reduce((acc, limbPose, i) => {
         if (limbPose === game.cardStack[index].limbs[i]) {
           return acc + 1;
         } else {
@@ -149,10 +149,11 @@ Rune.initLogic({
 
       // if the player got a perfect score this round, increase streak by 1 else reset to 0
       // player.score + score == player.score + 4 && player.correctStreak++;
-      player.score + score == player.score + 4
+      player.scoreForRound = scoreForRound;
+      player.score + scoreForRound == player.score + 4
         ? player.correctStreak++
         : (player.correctStreak = 0);
-      player.score = player.score + score;
+      player.score = player.score + scoreForRound;
     },
   },
   events: {

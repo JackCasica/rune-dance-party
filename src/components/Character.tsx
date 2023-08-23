@@ -1,4 +1,5 @@
 import React from "react";
+import { useState, useEffect } from "react";
 
 import { BodyProps, CharacterProps, LimbEnum, LimbProps } from "../types/types";
 
@@ -37,8 +38,6 @@ const Limb: React.FC<LimbProps> = ({ limb, player }) => {
     <div
       className={`absolute text-xl font-black ${position} aspect-square w-3/4`}
     >
-      {/* Remove for production; just helps match numbers during development */}
-      {/* {player.limbs[limb]}  */}
       <img
         src={`/limbs/${limbType}Pose=0.png`}
         className={`${
@@ -65,7 +64,10 @@ const Body: React.FC<BodyProps> = ({ children, player }) => {
   const { playerColor } = player;
   return (
     <div className="relative flex w-1/2 items-center justify-center rounded-full bg-black/0">
-      <img src={`/limbs/torso-${playerColor}.png`} className="z-10" />
+      <img
+        src={`/limbs/torso-${playerColor}.png`}
+        className="bobbing-animation z-10"
+      />
       {React.Children.map(children, (child) => {
         if (React.isValidElement(child)) {
           return React.cloneElement(child, { player: player });
@@ -77,11 +79,27 @@ const Body: React.FC<BodyProps> = ({ children, player }) => {
 };
 
 export const Character: React.FC<CharacterProps> = ({ playerName, player }) => {
+  const [showScore, setShowScore] = useState(false);
+
+  console.log(player.scoreForRound, player.score);
+  useEffect(() => {
+    if (player.score - player.scoreForRound > 0) {
+      setShowScore(true);
+      const timer = setTimeout(() => {
+        setShowScore(false);
+      }, 500);
+      return () => clearTimeout(timer); // Clear the timer if the component unmounts
+    }
+  }, [player.scoreForRound, player.score]);
   return (
-    <div className="relative flex aspect-square w-full flex-col items-center rounded-3xl bg-black/0 p-4">
-      <span>{playerName}</span>
-      <span className="stroke-text absolute right-0 top-0 font-black">
-        {player.score}
+    <div className="relative flex aspect-square w-full flex-col items-center rounded-3xl bg-black/0 p-4 font-black text-white ">
+      <span className="text-shadow">{playerName}</span>
+      <span
+        className={`stroke-text absolute right-0 top-0 font-black transition-all duration-200 ${
+          showScore ? "scale-100 opacity-100" : "scale-0 opacity-0"
+        }`}
+      >
+        {player.scoreForRound}
       </span>
       <Body player={player}>
         <Limb limb={LimbEnum.LeftArm} player={player} />
