@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
-
+import earnPoints from "../assets/earn-points.wav";
+import { playSound } from "../util/playSound";
 import { BodyProps, CharacterProps, LimbEnum, LimbProps } from "../types/types";
 
 import "../index.css";
@@ -78,12 +79,17 @@ const Body: React.FC<BodyProps> = ({ children, player }) => {
   );
 };
 
-export const Character: React.FC<CharacterProps> = ({ playerName, player }) => {
+export const Character: React.FC<CharacterProps> = ({
+  playerName,
+  player,
+  yourPlayerId,
+}) => {
   const [showScore, setShowScore] = useState(false);
 
-  console.log(player.scoreForRound, player.score);
   useEffect(() => {
-    if (player.score - player.scoreForRound > 0) {
+    if (player.scoreForRound > 0 && player.playerId === yourPlayerId) {
+      /* THIS CONDITIONAL MAKES IT SO THAT EACH PLAYER CAN ONLY SEE THEIR OWN SCORE UPDATE AND HEAR THEIR OWN SOUND EFFECT WHEN THEY SCORE A POINT  */
+      playSound(earnPoints);
       setShowScore(true);
       const timer = setTimeout(() => {
         setShowScore(false);
@@ -93,7 +99,9 @@ export const Character: React.FC<CharacterProps> = ({ playerName, player }) => {
   }, [player.scoreForRound, player.score]);
   return (
     <div className="relative flex aspect-square w-full flex-col items-center rounded-3xl bg-black/0 p-4 font-black text-white ">
-      <span className="text-shadow">{playerName}</span>
+      <span className="text-shadow absolute top-0 -translate-y-1/2">
+        {playerName}
+      </span>
       <span
         className={`stroke-text absolute right-0 top-0 font-black transition-all duration-200 ${
           showScore ? "scale-100 opacity-100" : "scale-0 opacity-0"

@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from "react";
 
-import { Card, Player, StageProps } from "../types/types";
+import { Card, Player, StageProps, StageContainerProps } from "../types/types";
 import { RoundTimer } from "./RoundTimer";
 import { StageCard } from "./StageCard";
 import { Timer } from "./Timer";
+import { Deck } from "./Deck";
+import { ActiveCard } from "./ActiveCard";
+
+const StageContainer: React.FC<StageContainerProps> = ({ children }) => {
+  return (
+    <div className="relative h-fit w-full overflow-hidden rounded-3xl bg-pink-600 p-2">
+      {children}
+    </div>
+  );
+};
 
 export const Stage: React.FC<StageProps> = ({
   game,
@@ -38,57 +48,24 @@ export const Stage: React.FC<StageProps> = ({
     if (activeCardIndex > 0) {
       setActiveCard(stageCards[0]);
       setStageCards((prev) => prev.slice(1));
-      // console.log("after active card removed: " + stageCards.length);
     }
   }, [activeCardIndex]);
 
   return (
-    <div className="relative h-fit w-full overflow-hidden rounded-xl bg-pink-600 p-2">
+    <StageContainer>
       <Timer game={game} />
       <div
         id="stage"
-        className="relative flex  h-fit w-full  gap-4 overflow-hidden rounded-xl bg-orange-500 p-4"
+        className="relative flex  h-fit w-full  gap-4 overflow-hidden rounded-2xl bg-orange-500 p-4"
       >
         <RoundTimer
           game={game}
           turnCard={turnCard}
           activeCardIndex={activeCardIndex}
         />
-        <div
-          id="active-card"
-          className={`mr-10 h-14 w-10 ${
-            activeCard || "rounded-xl border-4 border-dashed border-black"
-          }`}
-          style={{ width: "20vw", height: "25vw" }}
-        >
-          {activeCard ? (
-            <StageCard
-              active={true}
-              color={activeCard.color}
-              limbs={activeCard.limbs}
-              shown={true}
-            />
-          ) : (
-            <> </>
-          )}
-        </div>
-        <div
-          id="deck"
-          className="relative flex" // ... like me
-        >
-          {stageCards.map((cardItem: Card, i: number) => (
-            <div key={`stage-cards-${i}`}>
-              <StageCard
-                color={cardItem.color}
-                leftOffset={`${i * 10 + 2}px`}
-                z={`${stageCards.length - i}`}
-                limbs={cardItem.limbs}
-                shown={predictor}
-              />
-            </div>
-          ))}
-        </div>
+        <ActiveCard activeCard={activeCard} />
+        <Deck stageCards={stageCards} predictor={predictor} />
       </div>
-    </div>
+    </StageContainer>
   );
 };

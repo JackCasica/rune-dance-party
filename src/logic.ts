@@ -1,8 +1,9 @@
 import type { RuneClient } from "rune-games-sdk/multiplayer";
 import { GameState, GameActions, Player, LimbEnum } from "./types/types";
 import { generateCardStack } from "./util/generateCardStack.ts";
-import gameOverSound from "./assets/game over.wav";
+import gameOverSound from "./assets/game-over.wav";
 import { playSound } from "./util/playSound.ts";
+import purpleSoda from "./assets/purple-soda.mp3";
 
 declare global {
   const Rune: RuneClient<GameState, GameActions>;
@@ -18,7 +19,7 @@ Rune.initLogic({
     return {
       count: 0,
       currentPlayerIndex: 0,
-      remainingTime: 60, // Should be 60 seconds for production
+      remainingTime: 60,
       currentRound: 1,
       // cardStack: generateCardStack(10),
       cardStack: [
@@ -34,7 +35,6 @@ Rune.initLogic({
         { color: "pink", limbs: [2, 1, 3, 2] },
       ],
       activeCard: null,
-
       winner: null,
       players: playerIds.map((playerId, i) => ({
         key: playerId,
@@ -155,6 +155,15 @@ Rune.initLogic({
         : (player.correctStreak = 0);
       player.score = player.score + scoreForRound;
     },
+    setWinner: (_, { game }) => {
+      let winner = game.players[0];
+      game.players.forEach((player) => {
+        if (player.score > winner.score) {
+          winner = player;
+        }
+      });
+      game.winner = winner.playerId;
+    },
   },
   events: {
     playerJoined: () => {
@@ -164,12 +173,18 @@ Rune.initLogic({
       // Handle player left
     },
   },
-  update: ({ game }) => {
+  update: ({ game, allPlayerIds }) => {
     /* THIS UPDATE FUNCTION RUNS EVERY 1 SECOND */
     const timeElapsed = Rune.gameTimeInSeconds();
     game.remainingTime = 60 - timeElapsed;
     if (game.remainingTime === 0) {
-      playSound(gameOverSound);
+      let winner = game.players[0];
+      game.players.forEach((player) => {
+        if (player.score > winner.score) {
+          winner = player;
+        }
+      });
+      game.winner = winner.playerId;
       Rune.gameOver({
         players: {
           [game.players[0].playerId]: game.players[0].score,

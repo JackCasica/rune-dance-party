@@ -70,30 +70,30 @@ const Powerups: React.FC<PowerUpsProps> = ({ game, activeCardIndex }) => {
           runPowerup("shuffle", shuffle, 1);
         }}
         className={`relative flex  w-3/4 items-center justify-center rounded-3xl border-8 border-black p-2 text-sm font-black hover:cursor-pointer ${
-          correctStreak ? " bg-white" : " bg-white/20"
+          correctStreak ? " opacity-100" : " opacity-20"
         }`}
       >
-        Shuffle
+        <img className="aspect-square w-8" src="/shuffle.png" />
       </button>
       <button
         onClick={() => {
           runPowerup("predictor", revealBonus, 1);
         }}
         className={`relative flex  w-3/4 items-center justify-center rounded-3xl border-8 border-black p-2 text-sm font-black hover:cursor-pointer ${
-          correctStreak ? " bg-white" : " bg-white/20"
+          correctStreak ? "opacity-100" : " opacity-20"
         }`}
       >
-        Predictor
+        <img className="aspect-square w-8" src="/predictor.png" />
       </button>
       <button
         onClick={() => {
           runPowerup("autoLimb", revealBonus, 2);
         }}
         className={`relative flex  w-3/4 items-center justify-center rounded-3xl border-8 border-black p-2 text-sm font-black hover:cursor-pointer ${
-          correctStreak > 1 ? " bg-white" : " bg-white/20"
+          correctStreak > 1 ? "opacity-100" : " opacity-20"
         }`}
       >
-        Auto Limb
+        <img className="aspect-square w-8" src="/auto-limb.png" />
       </button>
     </div>
   );

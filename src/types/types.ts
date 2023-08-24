@@ -1,3 +1,4 @@
+import { ActiveCard } from "./../components/ActiveCard";
 // export type Limb = "left arm" | "right arm" | "left leg" | "right leg";
 export enum LimbEnum {
   LeftArm,
@@ -13,6 +14,15 @@ export type StageCardProps = {
   active?: boolean;
   limbs: number[];
   shown: boolean;
+};
+
+export type ActiveCardProps = {
+  activeCard: Card | null;
+};
+
+export type StageContainerProps = {
+  children?: React.ReactNode;
+  game?: any;
 };
 
 export type ControlsProps = {
@@ -93,11 +103,13 @@ export type GameActions = {
   togglePredictor: (params: { isActive: boolean }) => void;
   toggleLimb: (params: { limb: LimbEnum }) => void;
   checkPlayerPoses: (params: { index: number }) => void;
+  setWinner: () => void;
 };
 
 export type CharacterProps = {
   player: Player;
   playerName: string;
+  yourPlayerId: string;
 };
 
 export type LimbProps = {
