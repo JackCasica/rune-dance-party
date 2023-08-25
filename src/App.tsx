@@ -5,19 +5,34 @@ import { Stage } from "./components/Stage";
 import { useGame } from "./hooks/useGame.ts";
 
 import type { Player } from "./types/types.ts";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import purpleSoda from "./assets/purple-soda.mp3";
 import { playSound } from "./util/playSound.ts";
 import gameOverSound from "./assets/game-over.wav";
 import lose from "./assets/lose.wav";
 const backgroundMusic = new Audio(purpleSoda);
 backgroundMusic.volume = 0.1;
-backgroundMusic.play();
 
 function App() {
   const [activeCardIndex, setActiveCardIndex] = useState<number>(0);
   /* THIS IS THE GAME DATA FROM SERVER. PASS THIS TO COMPONENTS THAT NEED GAME STATE DATA, ETC */
   const game = useGame();
+
+  useEffect(() => {
+    const playMusicOnce = () => {
+      backgroundMusic.play();
+      window.removeEventListener("click", playMusicOnce);
+      window.removeEventListener("touchstart", playMusicOnce);
+    };
+
+    window.addEventListener("click", playMusicOnce);
+    window.addEventListener("touchstart", playMusicOnce);
+
+    return () => {
+      window.removeEventListener("click", playMusicOnce);
+      window.removeEventListener("touchstart", playMusicOnce);
+    };
+  }, []);
 
   if (game?.gameOver) {
     backgroundMusic.pause();

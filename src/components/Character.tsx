@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import earnPoints from "../assets/earn-points.wav";
 import { playSound } from "../util/playSound";
 import { BodyProps, CharacterProps, LimbEnum, LimbProps } from "../types/types";
-
+import noPoints from "../assets/no-points.wav";
 import "../index.css";
 
 const Limb: React.FC<LimbProps> = ({ limb, player }) => {
@@ -90,12 +90,17 @@ export const Character: React.FC<CharacterProps> = ({
     if (player.scoreForRound > 0 && player.playerId === yourPlayerId) {
       /* THIS CONDITIONAL MAKES IT SO THAT EACH PLAYER CAN ONLY SEE THEIR OWN SCORE UPDATE AND HEAR THEIR OWN SOUND EFFECT WHEN THEY SCORE A POINT  */
       playSound(earnPoints);
-      setShowScore(true);
-      const timer = setTimeout(() => {
-        setShowScore(false);
-      }, 500);
-      return () => clearTimeout(timer); // Clear the timer if the component unmounts
     }
+    if (player.scoreForRound === 0 && player.playerId === yourPlayerId) {
+      /* THIS CONDITIONAL MAKES IT SO THAT EACH PLAYER CAN ONLY SEE THEIR OWN SCORE UPDATE AND HEAR THEIR OWN SOUND EFFECT WHEN THEY SCORE A POINT  */
+      playSound(noPoints);
+    }
+
+    setShowScore(true);
+    const timer = setTimeout(() => {
+      setShowScore(false);
+    }, 500);
+    return () => clearTimeout(timer); // Clear the timer if the component unmounts
   }, [player.scoreForRound, player.score]);
   return (
     <div className="relative flex aspect-square w-full flex-col items-center rounded-3xl bg-black/0 p-4 font-black text-white ">
