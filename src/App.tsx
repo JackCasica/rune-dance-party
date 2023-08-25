@@ -19,41 +19,39 @@ function App() {
   /* THIS IS THE GAME DATA FROM SERVER. PASS THIS TO COMPONENTS THAT NEED GAME STATE DATA, ETC */
   const game = useGame();
 
-  /* GUARD CLAUSE PREVENTS RENDERING OUT GAME UI IF GAME ISN'T READY */
-  if (!game) {
-    return;
-  }
-
-  if (game.newGame.remainingTime === 0) {
+  if (game?.gameOver) {
     backgroundMusic.pause();
-
-    if (game.newGame.winner === game.yourPlayerId) {
-      playSound(gameOverSound);
-    } else {
-      playSound(lose);
-    }
+    game.newGame.winner === game.yourPlayerId
+      ? playSound(gameOverSound)
+      : playSound(lose);
   }
 
   /* RENDERING OUT GAME UI IF THE GAME IS READY */
   return (
-    <main className="flex h-screen w-full flex-col justify-between gap-4 bg-brilliant-azure p-4">
-      <Stage
-        game={game}
-        activeCardIndex={activeCardIndex}
-        setActiveCardIndex={setActiveCardIndex}
-      />
-      <DanceFloor game={game}>
-        {game.newGame.players.map((player: Player) => (
-          <Character
-            key={player.playerId}
-            playerName={game.players[player.playerId].displayName}
-            player={player}
-            yourPlayerId={game.yourPlayerId}
+    <>
+      {game ? (
+        <main className="flex h-screen w-full flex-col justify-between gap-4 bg-brilliant-azure p-4">
+          <Stage
+            game={game}
+            activeCardIndex={activeCardIndex}
+            setActiveCardIndex={setActiveCardIndex}
           />
-        ))}
-      </DanceFloor>
-      <Controls game={game} activeCardIndex={activeCardIndex} />
-    </main>
+          <DanceFloor game={game}>
+            {game.newGame.players.map((player: Player) => (
+              <Character
+                key={player.playerId}
+                playerName={game.players[player.playerId].displayName}
+                player={player}
+                yourPlayerId={game.yourPlayerId}
+              />
+            ))}
+          </DanceFloor>
+          <Controls game={game} activeCardIndex={activeCardIndex} />
+        </main>
+      ) : (
+        ""
+      )}
+    </>
   );
 }
 

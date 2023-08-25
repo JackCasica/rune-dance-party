@@ -1,4 +1,5 @@
 import { ActiveCard } from "./../components/ActiveCard";
+
 // export type Limb = "left arm" | "right arm" | "left leg" | "right leg";
 export enum LimbEnum {
   LeftArm,
@@ -91,6 +92,7 @@ export interface GameState {
   winner?: string | null;
   players: Player[];
   testNum?: number;
+  gameOver: boolean;
 }
 
 export type GameActions = {

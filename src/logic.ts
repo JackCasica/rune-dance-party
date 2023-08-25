@@ -17,6 +17,7 @@ Rune.initLogic({
   maxPlayers: 4,
   setup: (playerIds): GameState => {
     return {
+      gameOver: false,
       count: 0,
       currentPlayerIndex: 0,
       remainingTime: 60,
@@ -155,6 +156,7 @@ Rune.initLogic({
         : (player.correctStreak = 0);
       player.score = player.score + scoreForRound;
     },
+
     setWinner: (_, { game }) => {
       let winner = game.players[0];
       game.players.forEach((player) => {
@@ -178,6 +180,7 @@ Rune.initLogic({
     const timeElapsed = Rune.gameTimeInSeconds();
     game.remainingTime = 60 - timeElapsed;
     if (game.remainingTime === 0) {
+      game.gameOver = true;
       let winner = game.players[0];
       game.players.forEach((player) => {
         if (player.score > winner.score) {
