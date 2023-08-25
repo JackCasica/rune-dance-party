@@ -8,6 +8,7 @@ export const StageCard: React.FC<StageCardProps> = ({
   leftOffset,
   z,
   limbs,
+  shown,
 }) => {
   const [colorNicer, setColorNicer] = useState<Record<string, string>>({
     pink: "bg-vivid-raspberry",
@@ -19,11 +20,11 @@ export const StageCard: React.FC<StageCardProps> = ({
   return (
     <div
       id="stage-card"
-      className={`card absolute`}
-      style={{ left: leftOffset, zIndex: z, width: "20vw", height: "25vw" }}
+      className={`card absolute h-[25vw] w-[20vw] `}
+      style={{ left: leftOffset, zIndex: z }}
     >
-      <StageCardFront limbs={limbs} />
-      <StageCardBack color={colorNicer[color]} />
+      <StageCardFront limbs={limbs} shown={shown} />
+      <StageCardBack color={colorNicer[color]} shown={shown} />
     </div>
   );
 };

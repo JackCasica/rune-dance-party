@@ -1,7 +1,9 @@
-export const StageCardFront = ({ limbs }) => {
+export const StageCardFront = ({ limbs, shown }) => {
   return (
     <div
-      className={`card__side card__side--front bold relative flex w-full flex-col items-center rounded-xl border-8 border-black bg-white py-4 `}
+      className={`card__side card__side--front ${
+        shown ? "show-front" : ""
+      } bold relative flex w-full flex-col items-center rounded-xl border-8 border-black bg-white py-4 `}
     >
       <div className="relative flex w-1/2 items-center justify-center">
         <img src={`/limbs/torso.png`} className="z-10" />

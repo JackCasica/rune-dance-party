@@ -119,10 +119,10 @@ button:focus-visible {
   transform: rotateY(180deg); /* Rotate the back side */
 }
 
-.card:hover .card__side--back {
+.hide-back {
   transform: rotateY(180deg); /* Rotate the front side on hover */
 }
 
-.card:hover .card__side--front {
+.show-front {
   transform: rotateY(360deg); /* Rotate the back side on hover */
 }
