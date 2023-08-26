@@ -1,5 +1,5 @@
-import { StageCard } from "./StageCard";
 import { Card, DeckProps } from "../types/types";
+import { StageCard } from "./StageCard";
 
 export const Deck: React.FC<DeckProps> = ({
   children,

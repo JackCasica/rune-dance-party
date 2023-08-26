@@ -1,28 +1,42 @@
 import React, { useEffect, useState } from "react";
 
-export const Timer = ({ game }) => {
-  const [offset, setOffset] = useState(0);
-  const radius = 130;
-  const circumference = 2 * Math.PI * radius;
+const radius = 50;
+const circumference = 2 * Math.PI * radius;
+const INTERVAL = 6;
 
+export const Timer = ({ game }) => {
+  /* TIMER */
+  const [offset, setOffset] = useState(0);
+
+  // 1. Add new state variable
+  const [timeLeftInRound, setTimeLeftInRound] = useState<number>(INTERVAL);
+
+  // 2. Update time left in round
   useEffect(() => {
-    const progress = game?.newGame?.remainingTime / 60;
+    const progress = 60 - game?.newGame.remainingTime;
+    const timeInRound = progress % INTERVAL;
+    setTimeLeftInRound(INTERVAL - timeInRound);
+  }, [game?.newGame.remainingTime]);
+
+  // 3. Update offset calculation
+  useEffect(() => {
+    const progress = timeLeftInRound / INTERVAL;
     const offsetValue = circumference - progress * circumference;
     setOffset(offsetValue);
-  }, [game?.newGame?.remainingTime]);
+  }, [timeLeftInRound, circumference]);
 
   return (
     <svg
       width="100%"
       height="100%"
-      className="absolute left-1/2 top-1/2  -translate-x-1/2 -translate-y-1/2"
+      className="absolute left-1/2 top-1/2  -translate-x-1/2 -translate-y-1/2 -rotate-45"
     >
       <circle
-        stroke="black"
+        stroke="#ff006e"
         fill="transparent"
-        strokeWidth="200"
+        strokeWidth="50"
         strokeDasharray={circumference}
-        strokeDashoffset={offset}
+        strokeDashoffset={`${offset}`}
         r={radius}
         cx="50%"
         cy="50%"

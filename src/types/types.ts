@@ -1,5 +1,5 @@
-import { Card } from "./../components/Card";
 import { ActiveCard } from "./../components/ActiveCard";
+import { Card } from "./../components/Card";
 
 // export type Limb = "left arm" | "right arm" | "left leg" | "right leg";
 export enum LimbEnum {
@@ -85,10 +85,6 @@ export type CardProps = {
 
 export type CardsProps = {
   children?: React.ReactNode;
-  activeCardIndex: number;
-  setActiveCardIndex: Function;
-  game: any;
-  activeCard: CardProps | null;
 };
 
 export interface GameState {

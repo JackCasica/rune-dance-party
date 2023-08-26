@@ -1,9 +1,5 @@
 import type { RuneClient } from "rune-games-sdk/multiplayer";
 import { GameState, GameActions, Player, LimbEnum } from "./types/types";
-import { generateCardStack } from "./util/generateCardStack.ts";
-import gameOverSound from "./assets/game-over.wav";
-import { playSound } from "./util/playSound.ts";
-import purpleSoda from "./assets/purple-soda.mp3";
 
 declare global {
   const Rune: RuneClient<GameState, GameActions>;
@@ -12,7 +8,7 @@ declare global {
 const playerColors: string[] = ["pink", "purple", "orange", "yellow"];
 
 Rune.initLogic({
-  minPlayers: 2 /* TEMPORARILY SET TO SHOW AUTOMATICALLY SHOW 4 DEVICES DURING 
+  minPlayers: 4 /* TEMPORARILY SET TO SHOW AUTOMATICALLY SHOW 4 DEVICES DURING 
   DEVELOPMENT, BUT WILL ULTIMATELY SET TO 1 */,
   maxPlayers: 4,
   setup: (playerIds): GameState => {

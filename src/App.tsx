@@ -1,9 +1,9 @@
+import { Cards } from "./components/Cards.tsx";
 import { Character } from "./components/Character.tsx";
 import { Controls } from "./components/Controls.tsx";
 import { DanceFloor } from "./components/DanceFloor.tsx";
-import { Stage } from "./components/Stage";
 import { useGame } from "./hooks/useGame.ts";
-import { Cards } from "./components/Cards.tsx";
+
 import type { Player } from "./types/types.ts";
 import { useState, useEffect } from "react";
 import purpleSoda from "./assets/purple-soda.mp3";
@@ -13,6 +13,7 @@ import lose from "./assets/lose.wav";
 import { Card } from "./components/Card.tsx";
 import { CardProps } from "./types/types.ts";
 import pageTurn from "./assets/page turn.wav";
+import { Timer } from "./components/Timer.tsx";
 
 const backgroundMusic = new Audio(purpleSoda);
 backgroundMusic.volume = 0.1;
@@ -40,6 +41,7 @@ function App() {
   }, []);
 
   if (game?.gameOver) {
+    console.log(`game over`);
     backgroundMusic.pause();
     game.newGame.winner === game.yourPlayerId
       ? playSound(gameOverSound)
@@ -52,19 +54,19 @@ function App() {
       Rune.actions.checkPlayerPoses({ index: activeCardIndex });
 
       if (game.newGame.cardStack.slice(1).length > 0) {
-        console.log(activeCardIndex);
         setActiveCardIndex((prev: number) => prev + 1);
       }
 
       Rune.actions.incrementRoundNumber();
-      playSound(pageTurn);
+
+      player.playerId === game.yourPlayerId && playSound(pageTurn);
     }
   }, [game?.newGame.remainingTime]);
 
   /* RENDERING OUT GAME UI IF THE GAME IS READY */
   return (
     <>
-      {game ? (
+      {game && (
         <main className="flex h-screen w-full flex-col justify-between gap-4 bg-brilliant-azure p-4">
           <DanceFloor game={game}>
             {game.newGame.players.map((player: Player) => (
@@ -72,37 +74,32 @@ function App() {
                 key={player.playerId}
                 playerName={game.players[player.playerId].displayName}
                 player={player}
-                yourPlayerId={player.playerId}
+                yourPlayerId={game.yourPlayerId}
+                currentRound={game.newGame.currentRound}
               />
             ))}
             <Cards>
-              {game.newGame.cardStack[activeCardIndex] ? (
-                <Card
-                  active={true}
-                  color={game.newGame.cardStack[activeCardIndex].color}
-                  limbs={game.newGame.cardStack[activeCardIndex].limbs}
-                  shown={true}
-                  z={"50"}
-                />
-              ) : (
-                <> </>
-              )}
+              <Card
+                color={game.newGame.cardStack[activeCardIndex].color}
+                limbs={game.newGame.cardStack[activeCardIndex].limbs}
+                shown={true}
+                z={"50"} /* ALWAYS ON TOP */
+              />
               {game.newGame.cardStack.map((cardItem: CardProps, i: number) => (
                 <Card
                   key={`stage-cards-${i}`}
                   color={cardItem.color}
-                  leftOffset={`${i * 10 + 2}px`}
+                  rotate={`${i * 10 + 2}deg`}
                   z={`${game.newGame.cardStack.length - i}`}
                   limbs={cardItem.limbs}
                   shown={player.predictor}
                 />
               ))}
             </Cards>
+            <Timer game={game} />
           </DanceFloor>
           <Controls game={game} activeCardIndex={activeCardIndex} />
         </main>
-      ) : (
-        ""
       )}
     </>
   );

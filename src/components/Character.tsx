@@ -1,9 +1,11 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
 import earnPoints from "../assets/earn-points.wav";
-import { playSound } from "../util/playSound";
-import { BodyProps, CharacterProps, LimbEnum, LimbProps } from "../types/types";
 import noPoints from "../assets/no-points.wav";
+import { BodyProps, CharacterProps, LimbEnum, LimbProps } from "../types/types";
+import { playSound } from "../util/playSound";
+
 import "../index.css";
 
 const Limb: React.FC<LimbProps> = ({ limb, player }) => {
@@ -83,15 +85,20 @@ export const Character: React.FC<CharacterProps> = ({
   playerName,
   player,
   yourPlayerId,
+  currentRound,
 }) => {
   const [showScore, setShowScore] = useState(false);
 
   useEffect(() => {
     if (player.scoreForRound > 0 && player.playerId === yourPlayerId) {
       /* THIS CONDITIONAL MAKES IT SO THAT EACH PLAYER CAN ONLY SEE THEIR OWN SCORE UPDATE AND HEAR THEIR OWN SOUND EFFECT WHEN THEY SCORE A POINT  */
-      playSound(earnPoints);
+      playSound(earnPoints, 0.2);
     }
-    if (player.scoreForRound === 0 && player.playerId === yourPlayerId) {
+    if (
+      currentRound !== 1 &&
+      player.scoreForRound === 0 &&
+      player.playerId === yourPlayerId
+    ) {
       /* THIS CONDITIONAL MAKES IT SO THAT EACH PLAYER CAN ONLY SEE THEIR OWN SCORE UPDATE AND HEAR THEIR OWN SOUND EFFECT WHEN THEY SCORE A POINT  */
       playSound(noPoints);
     }
@@ -104,8 +111,8 @@ export const Character: React.FC<CharacterProps> = ({
     return () => clearTimeout(timer); // Clear the timer if the component unmounts
   }, [player.scoreForRound, player.score]);
   return (
-    <div className="relative flex aspect-square w-full flex-col items-center rounded-3xl bg-black/0 p-4 font-black text-white ">
-      <span className="text-shadow absolute top-0 -translate-y-1/2">
+    <div className="relative flex aspect-square w-full flex-col items-center justify-center rounded-3xl bg-black/0 p-4 font-black text-white ">
+      <span className="text-shadow absolute top-[10%] -translate-y-1/2">
         {playerName}
       </span>
       <span
