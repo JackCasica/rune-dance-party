@@ -22,7 +22,7 @@ const Powerups: React.FC<PowerUpsProps> = ({ game, activeCardIndex }) => {
 
   useManagePowerups(game);
 
-  const { correctStreak, controlsOrder } = game.newGame.players.find(
+  const { correctStreak, controlsOrder } = game?.newGame?.players.find(
     (player: Player) => player.playerId === game.yourPlayerId,
   );
 
@@ -100,7 +100,7 @@ const Powerups: React.FC<PowerUpsProps> = ({ game, activeCardIndex }) => {
 };
 
 const LimbControls: React.FC<LimbControlsProps> = ({ game }) => {
-  const { controlsOrder, autoLimb } = game.newGame.players.find(
+  const { controlsOrder, autoLimb } = game?.newGame?.players.find(
     (player: Player) => player.playerId === game.yourPlayerId,
   );
 

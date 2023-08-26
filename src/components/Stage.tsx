@@ -21,10 +21,12 @@ export const Stage: React.FC<StageProps> = ({
   setActiveCardIndex,
 }) => {
   const [stageCards, setStageCards] = useState<Card[]>(
-    game.newGame.cardStack.slice(1),
+    game?.newGame?.cardStack.slice(1),
   );
-  const [activeCard, setActiveCard] = useState<Card>(game.newGame.cardStack[0]);
-  const { predictor } = game.newGame.players.find(
+  const [activeCard, setActiveCard] = useState<Card>(
+    game?.newGame?.cardStack[0],
+  );
+  const { predictor } = game?.newGame?.players.find(
     (player: Player) => player.playerId === game.yourPlayerId,
   );
   // const [activeCardIndex, setActiveCardIndex] = useState<number>(0);

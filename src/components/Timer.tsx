@@ -6,10 +6,10 @@ export const Timer = ({ game }) => {
   const circumference = 2 * Math.PI * radius;
 
   useEffect(() => {
-    const progress = game.newGame.remainingTime / 60;
+    const progress = game?.newGame?.remainingTime / 60;
     const offsetValue = circumference - progress * circumference;
     setOffset(offsetValue);
-  }, [game.newGame.remainingTime]);
+  }, [game?.newGame?.remainingTime]);
 
   return (
     <svg

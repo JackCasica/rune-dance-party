@@ -2,7 +2,7 @@ import React from "react";
 import { DanceFloorProps } from "../types/types";
 
 export const DanceFloor: React.FC<DanceFloorProps> = ({ children, game }) => {
-  const multiplayerLayout = game.newGame.players.length > 1;
+  const multiplayerLayout = game?.newGame?.players.length > 1;
 
   return (
     <div

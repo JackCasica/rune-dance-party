@@ -12,9 +12,11 @@ import gameOverSound from "./assets/game-over.wav";
 import lose from "./assets/lose.wav";
 import { Card } from "./components/Card.tsx";
 import { CardProps } from "./types/types.ts";
+import pageTurn from "./assets/page turn.wav";
+
 const backgroundMusic = new Audio(purpleSoda);
 backgroundMusic.volume = 0.1;
-
+const INTERVAL = 6; // THIS IS THE AMOUNT OF TIME IN A ROUND, IN SECONDS
 function App() {
   const [activeCardIndex, setActiveCardIndex] = useState<number>(0);
   /* THIS IS THE GAME DATA FROM SERVER. PASS THIS TO COMPONENTS THAT NEED GAME STATE DATA, ETC */
@@ -43,12 +45,37 @@ function App() {
     };
   }, []);
 
+  const [stageCards, setStageCards] = useState<CardProps[]>(
+    game?.newGame.cardStack.slice(1),
+  );
+
+  useEffect(() => {
+    // TRIGGERED BY THE ACTIVE CARD INDEX CHANGING (skips initial render tho)
+    if (activeCardIndex > 0) {
+      setStageCards((prev) => prev.slice(1));
+    }
+  }, [activeCardIndex]);
+
   if (game?.gameOver) {
     backgroundMusic.pause();
     game.newGame.winner === game.yourPlayerId
       ? playSound(gameOverSound)
       : playSound(lose);
   }
+
+  useEffect(() => {
+    const progress = 60 - game?.newGame.remainingTime;
+    if (progress % INTERVAL === 0 && progress < 59 && progress > 0) {
+      Rune.actions.checkPlayerPoses({ index: activeCardIndex });
+
+      if (stageCards?.length > 0) {
+        setActiveCardIndex((prev: number) => prev + 1);
+      }
+
+      Rune.actions.incrementRoundNumber();
+      playSound(pageTurn);
+    }
+  }, [game?.newGame.remainingTime]);
 
   /* RENDERING OUT GAME UI IF THE GAME IS READY */
   return (
@@ -68,6 +95,8 @@ function App() {
               game={game}
               activeCardIndex={activeCardIndex}
               setActiveCardIndex={setActiveCardIndex}
+              activeCard={game.newGame.cardStack[activeCardIndex]}
+              stageCards={stageCards}
             >
               {game.newGame.cardStack.map((cardItem: CardProps, i: number) => (
                 <Card

@@ -10,9 +10,9 @@ export const RoundTimer: React.FC<RoundTimerProps> = ({
   activeCardIndex,
 }) => {
   const INTERVAL = 6; // THIS IS THE AMOUNT OF TIME IN A ROUND, IN SECONDS
-  const gameTimerProgress = 60 - game.newGame.remainingTime;
+  const gameTimerProgress = 60 - game?.newGame?.remainingTime;
   const [progress, setProgress] = useState<number>(gameTimerProgress);
-  const { currentRound } = game.newGame;
+  const { currentRound } = game?.newGame;
   const [transition, setTransition] = useState<string>(
     "transition-all duration-1000 ease-linear",
   );
@@ -46,10 +46,10 @@ export const RoundTimer: React.FC<RoundTimerProps> = ({
 
   useEffect(() => {
     // SCORE THE LAST ROUND A SECOND EARLY so gameOver doesn't interfere... may change later
-    if (currentRound === 10 && game.newGame.remainingTime === 1) {
+    if (currentRound === 10 && game?.newGame?.remainingTime === 1) {
       Rune.actions.checkPlayerPoses({ index: activeCardIndex });
     }
-  }, [currentRound, game.newGame.remainingTime]);
+  }, [currentRound, game?.newGame?.remainingTime]);
 
   return (
     <div className="absolute left-0 top-0 h-full w-full ">
