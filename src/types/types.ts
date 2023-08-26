@@ -1,3 +1,4 @@
+import { Card } from "./../components/Card";
 import { ActiveCard } from "./../components/ActiveCard";
 
 // export type Limb = "left arm" | "right arm" | "left leg" | "right leg";
@@ -18,7 +19,7 @@ export type StageCardProps = {
 };
 
 export type ActiveCardProps = {
-  activeCard: Card | null;
+  activeCard: CardProps | null;
 };
 
 export type StageContainerProps = {
@@ -77,9 +78,17 @@ export type Player = {
   predictor: boolean;
 };
 
-export type Card = {
+export type CardProps = {
   color: string;
   limbs: LimbEnum[];
+};
+
+export type CardsProps = {
+  children?: React.ReactNode;
+  activeCardIndex: number;
+  setActiveCardIndex: Function;
+  game: any;
+  activeCard: CardProps | null;
 };
 
 export interface GameState {
@@ -87,8 +96,8 @@ export interface GameState {
   currentPlayerIndex?: number;
   remainingTime?: number;
   currentRound: number;
-  activeCard: Card | null;
-  cardStack: Card[];
+  activeCard: CardProps | null;
+  cardStack: CardProps[];
   winner?: string | null;
   players: Player[];
   testNum?: number;
