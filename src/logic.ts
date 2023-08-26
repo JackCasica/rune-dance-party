@@ -12,7 +12,7 @@ declare global {
 const playerColors: string[] = ["pink", "purple", "orange", "yellow"];
 
 Rune.initLogic({
-  minPlayers: 4 /* TEMPORARILY SET TO SHOW AUTOMATICALLY SHOW 4 DEVICES DURING 
+  minPlayers: 2 /* TEMPORARILY SET TO SHOW AUTOMATICALLY SHOW 4 DEVICES DURING 
   DEVELOPMENT, BUT WILL ULTIMATELY SET TO 1 */,
   maxPlayers: 4,
   setup: (playerIds): GameState => {

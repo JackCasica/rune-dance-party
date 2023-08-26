@@ -22,15 +22,18 @@ function App() {
     const playMusicOnce = () => {
       backgroundMusic.play();
       window.removeEventListener("click", playMusicOnce);
-      window.removeEventListener("touchstart", playMusicOnce);
+      // window.removeEventListener("touchstart", playMusicOnce);
+      /* DOESNT SEEM TO PLAY WHEN BOTH ARE ONE, BUT WOULD BE BETTER FOR ACTUAL MOBILE TO USE TOUCHSTART */
     };
 
     window.addEventListener("click", playMusicOnce);
-    window.addEventListener("touchstart", playMusicOnce);
+    // window.addEventListener("touchstart", playMusicOnce);
+    /* DOESNT SEEM TO PLAY WHEN BOTH ARE ONE, BUT WOULD BE BETTER FOR ACTUAL MOBILE TO USE TOUCHSTART */
 
     return () => {
       window.removeEventListener("click", playMusicOnce);
-      window.removeEventListener("touchstart", playMusicOnce);
+      // window.removeEventListener("touchstart", playMusicOnce);
+      /* DOESNT SEEM TO PLAY WHEN BOTH ARE ONE, BUT WOULD BE BETTER FOR ACTUAL MOBILE TO USE TOUCHSTART */
     };
   }, []);
 
