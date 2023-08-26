@@ -30,31 +30,14 @@ function App() {
     const playMusicOnce = () => {
       backgroundMusic.play();
       window.removeEventListener("click", playMusicOnce);
-      // window.removeEventListener("touchstart", playMusicOnce);
-      /* DOESNT SEEM TO PLAY WHEN BOTH ARE ONE, BUT WOULD BE BETTER FOR ACTUAL MOBILE TO USE TOUCHSTART */
     };
 
     window.addEventListener("click", playMusicOnce);
-    // window.addEventListener("touchstart", playMusicOnce);
-    /* DOESNT SEEM TO PLAY WHEN BOTH ARE ONE, BUT WOULD BE BETTER FOR ACTUAL MOBILE TO USE TOUCHSTART */
 
     return () => {
       window.removeEventListener("click", playMusicOnce);
-      // window.removeEventListener("touchstart", playMusicOnce);
-      /* DOESNT SEEM TO PLAY WHEN BOTH ARE ONE, BUT WOULD BE BETTER FOR ACTUAL MOBILE TO USE TOUCHSTART */
     };
   }, []);
-
-  const [stageCards, setStageCards] = useState<CardProps[]>(
-    game?.newGame.cardStack.slice(1),
-  );
-
-  useEffect(() => {
-    // TRIGGERED BY THE ACTIVE CARD INDEX CHANGING (skips initial render tho)
-    if (activeCardIndex > 0) {
-      setStageCards((prev) => prev.slice(1));
-    }
-  }, [activeCardIndex]);
 
   if (game?.gameOver) {
     backgroundMusic.pause();
@@ -68,7 +51,8 @@ function App() {
     if (progress % INTERVAL === 0 && progress < 59 && progress > 0) {
       Rune.actions.checkPlayerPoses({ index: activeCardIndex });
 
-      if (stageCards?.length > 0) {
+      if (game.newGame.cardStack.slice(1).length > 0) {
+        console.log(activeCardIndex);
         setActiveCardIndex((prev: number) => prev + 1);
       }
 
@@ -91,13 +75,18 @@ function App() {
                 yourPlayerId={player.playerId}
               />
             ))}
-            <Cards
-              game={game}
-              activeCardIndex={activeCardIndex}
-              setActiveCardIndex={setActiveCardIndex}
-              activeCard={game.newGame.cardStack[activeCardIndex]}
-              stageCards={stageCards}
-            >
+            <Cards>
+              {game.newGame.cardStack[activeCardIndex] ? (
+                <Card
+                  active={true}
+                  color={game.newGame.cardStack[activeCardIndex].color}
+                  limbs={game.newGame.cardStack[activeCardIndex].limbs}
+                  shown={true}
+                  z={"50"}
+                />
+              ) : (
+                <> </>
+              )}
               {game.newGame.cardStack.map((cardItem: CardProps, i: number) => (
                 <Card
                   key={`stage-cards-${i}`}
