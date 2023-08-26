@@ -96,7 +96,8 @@ export const Character: React.FC<CharacterProps> = ({
       playSound(noPoints);
     }
 
-    setShowScore(true);
+    player.score !== 0 && setShowScore(true);
+
     const timer = setTimeout(() => {
       setShowScore(false);
     }, 500);
