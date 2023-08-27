@@ -41,9 +41,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log(game?.newGame.gameOver);
     if (game?.newGame.gameOver) {
-      console.log(`game over!`);
       backgroundMusic.pause();
       game.newGame.winner === game.yourPlayerId
         ? playSound(gameOverSound)
@@ -82,18 +80,24 @@ function App() {
               />
             ))}
             <Cards>
-              <Card
-                color={game.newGame.cardStack[activeCardIndex].color}
-                limbs={game.newGame.cardStack[activeCardIndex].limbs}
-                shown={true}
-                z={"50"} /* ALWAYS ON TOP */
-              />
               {game.newGame.cardStack.map((cardItem: CardProps, i: number) => {
+                if (i === activeCardIndex) {
+                  return (
+                    <Card
+                      key={`stage-cards-${i}`}
+                      color={game.newGame.cardStack[activeCardIndex].color}
+                      limbs={game.newGame.cardStack[activeCardIndex].limbs}
+                      shown={true}
+                      z={"50"} /* ALWAYS ON TOP */
+                    />
+                  );
+                }
+
                 return (
                   <Card
                     key={`stage-cards-${i}`}
                     color={cardItem.color}
-                    rotate={`${i * 10 + 2}deg`}
+                    rotate={`${i * 10 + 10}deg`}
                     z={`${game.newGame.cardStack.length - i}`} // REVERSE OF INDEX
                     limbs={cardItem.limbs}
                     shown={player.predictor}
