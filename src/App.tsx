@@ -40,13 +40,16 @@ function App() {
     };
   }, []);
 
-  if (game?.gameOver) {
-    console.log(`game over`);
-    backgroundMusic.pause();
-    game.newGame.winner === game.yourPlayerId
-      ? playSound(gameOverSound)
-      : playSound(lose);
-  }
+  useEffect(() => {
+    console.log(game?.newGame.gameOver);
+    if (game?.newGame.gameOver) {
+      console.log(`game over!`);
+      backgroundMusic.pause();
+      game.newGame.winner === game.yourPlayerId
+        ? playSound(gameOverSound)
+        : playSound(lose);
+    }
+  }, [game?.newGame.gameOver]);
 
   useEffect(() => {
     const progress = 60 - game?.newGame.remainingTime;
@@ -85,16 +88,18 @@ function App() {
                 shown={true}
                 z={"50"} /* ALWAYS ON TOP */
               />
-              {game.newGame.cardStack.map((cardItem: CardProps, i: number) => (
-                <Card
-                  key={`stage-cards-${i}`}
-                  color={cardItem.color}
-                  rotate={`${i * 10 + 2}deg`}
-                  z={`${game.newGame.cardStack.length - i}`}
-                  limbs={cardItem.limbs}
-                  shown={player.predictor}
-                />
-              ))}
+              {game.newGame.cardStack.map((cardItem: CardProps, i: number) => {
+                return (
+                  <Card
+                    key={`stage-cards-${i}`}
+                    color={cardItem.color}
+                    rotate={`${i * 10 + 2}deg`}
+                    z={`${game.newGame.cardStack.length - i}`} // REVERSE OF INDEX
+                    limbs={cardItem.limbs}
+                    shown={player.predictor}
+                  />
+                );
+              })}
             </Cards>
             <Timer game={game} />
           </DanceFloor>
