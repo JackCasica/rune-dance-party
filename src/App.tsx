@@ -81,26 +81,32 @@ function App() {
             ))}
             <Cards>
               {game.newGame.cardStack.map((cardItem: CardProps, i: number) => {
-                if (i === activeCardIndex) {
-                  return (
-                    <Card
-                      key={`stage-cards-${i}`}
-                      color={game.newGame.cardStack[activeCardIndex].color}
-                      limbs={game.newGame.cardStack[activeCardIndex].limbs}
-                      shown={true}
-                      z={"50"} /* ALWAYS ON TOP */
-                    />
-                  );
-                }
+                // if (i === activeCardIndex) {
+                //   return (
+                //     <Card
+                //       key={`stage-cards-${i}`}
+                //       color={game.newGame.cardStack[activeCardIndex].color}
+                //       limbs={game.newGame.cardStack[activeCardIndex].limbs}
+                //       shown={true}
+                //       z={"50"} /* ALWAYS ON TOP */
+                //     />
+                //   );
+                // }
 
                 return (
                   <Card
                     key={`stage-cards-${i}`}
                     color={cardItem.color}
-                    rotate={`${i * 10 + 10}deg`}
-                    z={`${game.newGame.cardStack.length - i}`} // REVERSE OF INDEX
+                    rotate={
+                      i === activeCardIndex ? "0deg" : `${i * 10 + 10}deg`
+                    }
+                    z={
+                      i === activeCardIndex
+                        ? "50"
+                        : `${game.newGame.cardStack.length - i}`
+                    } // REVERSE OF INDEX
                     limbs={cardItem.limbs}
-                    shown={player.predictor}
+                    shown={i === activeCardIndex ? true : player.predictor}
                   />
                 );
               })}
