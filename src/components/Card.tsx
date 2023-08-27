@@ -21,7 +21,7 @@ export const Card: React.FC<StageCardProps> = ({
   return (
     <div
       id="stage-card"
-      className={`card absolute left-1/2 top-1/2 h-[25vw] w-[20vw] -translate-x-1/2 -translate-y-1/2 transition-all`}
+      className={`card absolute left-1/2 top-1/2 h-[30vw] w-[24vw] -translate-x-1/2 -translate-y-1/2 transition-all`}
       style={{
         zIndex: z,
         rotate: rotate,

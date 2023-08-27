@@ -68,7 +68,7 @@ function App() {
   return (
     <>
       {game && (
-        <main className="flex h-screen w-full flex-col justify-between gap-4 bg-brilliant-azure p-4">
+        <main className="flex h-screen w-full flex-col justify-between gap-2 bg-brilliant-azure p-4">
           <DanceFloor game={game}>
             {game.newGame.players.map((player: Player) => (
               <Character
