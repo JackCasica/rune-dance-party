@@ -86,13 +86,16 @@ export const Character: React.FC<CharacterProps> = ({
   player,
   yourPlayerId,
   currentRound,
+  playerIndex,
 }) => {
   const [showScore, setShowScore] = useState(false);
 
   useEffect(() => {
     if (player.scoreForRound > 0 && player.playerId === yourPlayerId) {
       /* THIS CONDITIONAL MAKES IT SO THAT EACH PLAYER CAN ONLY SEE THEIR OWN SCORE UPDATE AND HEAR THEIR OWN SOUND EFFECT WHEN THEY SCORE A POINT  */
-      playSound(earnPoints, 0.2);
+      const gameOverAudio = new Audio(earnPoints);
+      gameOverAudio.volume = 0.2; // You can adjust the volume as needed
+      gameOverAudio.play();
     }
     if (
       currentRound !== 1 &&
@@ -100,7 +103,9 @@ export const Character: React.FC<CharacterProps> = ({
       player.playerId === yourPlayerId
     ) {
       /* THIS CONDITIONAL MAKES IT SO THAT EACH PLAYER CAN ONLY SEE THEIR OWN SCORE UPDATE AND HEAR THEIR OWN SOUND EFFECT WHEN THEY SCORE A POINT  */
-      playSound(noPoints);
+      const gameOverAudio = new Audio(noPoints);
+      gameOverAudio.volume = 0.2; // You can adjust the volume as needed
+      gameOverAudio.play();
     }
 
     player.score !== 0 && setShowScore(true);
@@ -111,7 +116,9 @@ export const Character: React.FC<CharacterProps> = ({
     return () => clearTimeout(timer); // Clear the timer if the component unmounts
   }, [player.scoreForRound, player.score]);
   return (
-    <div className="relative flex aspect-square w-full flex-col items-center justify-center rounded-3xl bg-black/0 p-4 font-black text-white ">
+    <div
+      className={`relative z-50 flex aspect-square w-full flex-col items-center justify-center rounded-3xl bg-black/0 p-4 font-black  text-white`}
+    >
       <span className="text-shadow absolute top-[10%] -translate-y-1/2">
         {playerName}
       </span>
