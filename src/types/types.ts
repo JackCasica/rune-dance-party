@@ -24,6 +24,8 @@ export type PlayerDetailsProps = {
   children?: React.ReactNode;
   player?: Player;
   showScore?: boolean;
+  playerName?: string;
+  scoreForRound?: number;
 };
 
 export type ActiveCardProps = {
@@ -125,6 +127,7 @@ export type CharacterProps = {
   player: Player;
   playerName: string;
   yourPlayerId: string;
+  currentRound: number;
 };
 
 export type LimbProps = {

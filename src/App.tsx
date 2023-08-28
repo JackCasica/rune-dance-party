@@ -6,17 +6,32 @@ import { useGame } from "./hooks/useGame.ts";
 
 import type { Player } from "./types/types.ts";
 import { useState, useEffect } from "react";
-import purpleSoda from "./assets/purple-soda.mp3";
+import backgroundMusic from "./assets/purple-soda.mp3";
 import { playSound } from "./util/playSound.ts";
-import gameOverSound from "./assets/game-over.wav";
+import win from "./assets/game-over.wav";
 import lose from "./assets/lose.wav";
 import { Card } from "./components/Card.tsx";
 import { CardProps } from "./types/types.ts";
 import pageTurn from "./assets/page turn.wav";
 import { Timer } from "./components/Timer.tsx";
+import { Howl } from "howler";
 
-const backgroundMusic = new Audio(purpleSoda);
-backgroundMusic.volume = 0.1;
+const backgroundMusicAudio = new Howl({
+  src: [backgroundMusic],
+});
+
+const pageTurnAudio = new Howl({
+  src: [pageTurn],
+});
+
+const winAudio = new Howl({
+  src: [win],
+});
+
+const loseAudio = new Howl({
+  src: [lose],
+});
+
 const INTERVAL = 6; // THIS IS THE AMOUNT OF TIME IN A ROUND, IN SECONDS
 
 function App() {
@@ -26,10 +41,10 @@ function App() {
   const game = useGame();
 
   if (game?.newGame.gameOver) {
-    backgroundMusic.pause();
+    backgroundMusicAudio.pause();
     game.newGame.winner === game.yourPlayerId
-      ? playSound(gameOverSound)
-      : playSound(lose);
+      ? winAudio.play()
+      : loseAudio.play();
   }
 
   const player = game?.newGame.players.find(
@@ -38,16 +53,16 @@ function App() {
 
   useEffect(() => {
     const playMusicOnce = () => {
-      backgroundMusic.play();
+      backgroundMusicAudio.play();
       window.removeEventListener("touchstart", playMusicOnce);
     };
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        backgroundMusic.pause();
+        backgroundMusicAudio.pause();
         setAppIsVisible(false);
       } else {
-        backgroundMusic.play();
+        backgroundMusicAudio.play();
       }
     };
 
@@ -68,7 +83,7 @@ function App() {
         setActiveCardIndex((prev: number) => prev + 1);
       }
       Rune.actions.incrementRoundNumber();
-      player.playerId === game.yourPlayerId && playSound(pageTurn);
+      player.playerId === game.yourPlayerId && pageTurnAudio.play();
     }
   }, [game?.newGame.remainingTime]);
 
