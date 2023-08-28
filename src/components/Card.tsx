@@ -3,10 +3,14 @@ import React, { useState } from "react";
 import type { StageCardProps } from "../types/types";
 import { StageCardFront } from "./StageCardFront";
 import { StageCardBack } from "./StageCardBack";
+import { act } from "react-dom/test-utils";
 
 export const Card: React.FC<StageCardProps> = ({
+  activeCardIndex,
+  index,
   color,
   rotate,
+  predictor,
   z,
   limbs,
   shown,
@@ -21,7 +25,11 @@ export const Card: React.FC<StageCardProps> = ({
   return (
     <div
       id="stage-card"
-      className={`card absolute left-1/2 top-1/2 h-[25vw] w-[20vw] -translate-x-1/2 -translate-y-1/2 transition-all `}
+      className={`card absolute left-1/2 top-1/2 h-[25vw] w-[20vw] -translate-x-1/2 ${
+        predictor && index === activeCardIndex + 1
+          ? "translate-x-0 translate-y-full -rotate-45"
+          : "-translate-y-1/2"
+      }  transition-all `}
       style={{
         zIndex: z,
         rotate: rotate,

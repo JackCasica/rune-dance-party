@@ -110,7 +110,9 @@ function App() {
               {game.newGame.cardStack.map((cardItem: CardProps, i: number) => {
                 return (
                   <Card
+                    activeCardIndex={activeCardIndex}
                     key={`stage-cards-${i}`}
+                    index={i}
                     color={cardItem.color}
                     rotate={i === activeCardIndex ? "0deg" : `${i * 5 + 10}deg`}
                     z={
@@ -119,7 +121,12 @@ function App() {
                         : `${game.newGame.cardStack.length - i}`
                     } // REVERSE OF INDEX
                     limbs={cardItem.limbs}
-                    shown={i === activeCardIndex ? true : player.predictor}
+                    predictor={player.predictor}
+                    shown={
+                      i === activeCardIndex
+                        ? true
+                        : player.predictor && i === activeCardIndex + 1
+                    }
                   />
                 );
               })}

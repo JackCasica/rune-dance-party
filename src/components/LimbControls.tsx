@@ -37,7 +37,7 @@ export const LimbControls: React.FC<LimbControlsProps> = ({ game }) => {
           <button
             key={control}
             className={`relative h-full w-full rounded-none bg-black/0
-              p-8 text-xs font-black transition-all hover:opacity-90
+              p-8 text-xs font-black outline-none transition-all active:opacity-70
               ${
                 autoLimb && control === "Left Arm"
                   ? "bg-slate-400"

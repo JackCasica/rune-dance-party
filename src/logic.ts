@@ -38,7 +38,7 @@ Rune.initLogic({
         playerId: playerId,
         playerColor: playerColors[i],
         limbs: [1, 1, 1, 1],
-        controlsOrder: ["Left Arm", "Right Arm", "Left Leg", "Right Leg"],
+        controlsOrder: ["Left Arm", "Left Leg", "Right Leg", "Right Arm"],
         scoreForRound: 0,
         score: 0,
         correctStreak: 0,
