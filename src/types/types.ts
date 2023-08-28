@@ -1,3 +1,5 @@
+import { Player } from "./types";
+import { PlayerDetails } from "./../components/PlayerDetails";
 import { ActiveCard } from "./../components/ActiveCard";
 import { Card } from "./../components/Card";
 
@@ -16,6 +18,12 @@ export type StageCardProps = {
   active?: boolean;
   limbs: number[];
   shown: boolean;
+};
+
+export type PlayerDetailsProps = {
+  children?: React.ReactNode;
+  player?: Player;
+  showScore?: boolean;
 };
 
 export type ActiveCardProps = {

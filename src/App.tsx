@@ -18,8 +18,10 @@ import { Timer } from "./components/Timer.tsx";
 const backgroundMusic = new Audio(purpleSoda);
 backgroundMusic.volume = 0.1;
 const INTERVAL = 6; // THIS IS THE AMOUNT OF TIME IN A ROUND, IN SECONDS
+
 function App() {
   const [activeCardIndex, setActiveCardIndex] = useState<number>(0);
+  const [appIsVisible, setAppIsVisible] = useState<boolean>(true);
   /* THIS IS THE GAME DATA FROM SERVER. PASS THIS TO COMPONENTS THAT NEED GAME STATE DATA, ETC */
   const game = useGame();
 
@@ -43,6 +45,7 @@ function App() {
     const handleVisibilityChange = () => {
       if (document.hidden) {
         backgroundMusic.pause();
+        setAppIsVisible(false);
       } else {
         backgroundMusic.play();
       }
@@ -56,6 +59,7 @@ function App() {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
+
   useEffect(() => {
     const progress = 60 - game?.newGame.remainingTime;
     if (progress % INTERVAL === 0 && progress < 59 && progress > 0) {
@@ -67,6 +71,10 @@ function App() {
       player.playerId === game.yourPlayerId && playSound(pageTurn);
     }
   }, [game?.newGame.remainingTime]);
+
+  if (!appIsVisible) {
+    return;
+  }
 
   return (
     <>

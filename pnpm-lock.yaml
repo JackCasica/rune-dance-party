@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  howler:
+    specifier: ^2.2.3
+    version: 2.2.3
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -1407,6 +1410,10 @@ packages:
     dependencies:
       function-bind: 1.1.1
     dev: true
+
+  /howler@2.2.3:
+    resolution: {integrity: sha512-QM0FFkw0LRX1PR8pNzJVAY25JhIWvbKMBFM4gqk+QdV+kPXOhleWGCB6AiAF/goGjIHK2e/nIElplvjQwhr0jg==}
+    dev: false
 
   /ignore@4.0.6:
     resolution: {integrity: sha512-cyFDKrqc/YdcWFniJhzI42+AzS+gNwmUzOSFcRCQYwySuBBBy/KjuxWLZ/FHEH6Moq1NizMOBWyTcv8O4OZIMg==}
