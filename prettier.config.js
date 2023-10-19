@@ -5,7 +5,8 @@ I also added a plugin for automatically sorting the tailwind utility classes:
 https://github.com/tailwindlabs/prettier-plugin-tailwindcss */
 
 const config = {
-  printWidth: 80,
+  printWidth: 120,
+  tabWidth: 4,
   plugins: ["prettier-plugin-tailwindcss"],
 };
 

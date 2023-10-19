@@ -4,6 +4,11 @@ import interfaceClick from "../assets/interface click.wav";
 
 import type { LimbControlsProps, Player } from "../types/types";
 import { LimbEnum } from "../types/types";
+import { howl } from "howler";
+
+const interfaceClickAudio = new Howl({
+  src: [interfaceClick],
+});
 
 export const LimbControls: React.FC<LimbControlsProps> = ({ game }) => {
   const { controlsOrder, autoLimb } = game?.newGame?.players.find(
@@ -18,9 +23,7 @@ export const LimbControls: React.FC<LimbControlsProps> = ({ game }) => {
   };
 
   const onClickHandler = (limb: LimbEnum) => {
-    new Audio(
-      interfaceClick,
-    ).play(); /* THIS HAPPENS ONLY ON THE INITIATING PLAYERS DEVICE */
+    interfaceClickAudio.play(); /* THIS HAPPENS ONLY ON THE INITIATING PLAYERS DEVICE */
     /* TELLS SERVER TO UPDATE THE LIMB POSE FOR THE ACTIVATING PLAYER - SEE ACTIONS IN LOGIC.TS */
     Rune.actions.toggleLimb({
       limb: limb,
