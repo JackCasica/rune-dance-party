@@ -1,4 +1,5 @@
 import { ActiveCard } from "./../components/ActiveCard";
+import { act } from 'react-dom/test-utils';
 
 import { Card } from "./../components/Card";
 import { PlayerDetails } from "./../components/PlayerDetails";
@@ -12,6 +13,11 @@ export enum LimbEnum {
   RightLeg,
 }
 
+export enum PoseEnum {
+  Straight,
+  BentUp,
+  BentDown,
+}
 export type StageCardProps = {
   activeCardIndex: number;
   color: string;
@@ -20,13 +26,16 @@ export type StageCardProps = {
   active?: boolean;
   limbs: number[];
   shown: boolean;
+  index: number;
+  rotate?: string;
+  predictor?: boolean;
 };
 
 export type PlayerDetailsProps = {
   children?: React.ReactNode;
   player?: Player;
   showScore?: boolean;
-  playerName?: string;
+  displayName?: string;
   scoreForRound?: number;
 };
 
@@ -46,6 +55,7 @@ export type ControlsProps = {
   player?: Player;
   yourPlayerId?: string;
   activeCardIndex: number;
+  controlsColor?: string;
 };
 
 export type DanceFloorProps = {
@@ -88,6 +98,7 @@ export type Player = {
   controlsOrder: string[];
   autoLimb: boolean;
   predictor: boolean;
+  displayName?: string;
 };
 
 export type CardProps = {
@@ -95,8 +106,10 @@ export type CardProps = {
   limbs: LimbEnum[];
 };
 
-export type CardsProps = {
-  children?: React.ReactNode;
+export type DeckProps = {
+  game: any;
+  activeCardIndex: number;
+  player: Player;
 };
 
 export interface GameState {
@@ -131,7 +144,7 @@ export type GameActions = {
 
 export type CharacterProps = {
   player: Player;
-  playerName: string;
+  displayName?: string;
   yourPlayerId: string;
   currentRound: number;
 };
@@ -162,4 +175,5 @@ export type PowerUpsProps = {
 export type LimbControlsProps = {
   children?: React.ReactNode;
   game?: any;
+  player: Player;
 };

@@ -14,7 +14,7 @@ export const Card: React.FC<StageCardProps> = ({
   limbs,
   shown,
 }) => {
-  const [colorNicer, setColorNicer] = useState<Record<string, string>>({
+  const [colorNicer] = useState<Record<string, string>>({
     pink: "bg-vivid-raspberry",
     yellow: "bg-ronchi",
     orange: "bg-willpower-orange",

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import earnPoints from "../assets/earn-points.wav";
 import noPoints from "../assets/no-points.wav";
+import { useDocumentVisibility } from "../hooks/useDocumentVisibility";
 import { CharacterProps, LimbEnum } from "../types/types";
 import { Body } from "./Body";
 import { Limb } from "./Limb";
@@ -18,14 +19,18 @@ const noPointsAudio = new Howl({
 });
 
 export const Character: React.FC<CharacterProps> = ({
-  playerName,
+  displayName,
   player,
   yourPlayerId,
   currentRound,
 }) => {
   const [showScore, setShowScore] = useState(false);
+  const documentVisibility = useDocumentVisibility();
 
+  console.log(documentVisibility, "documentVisibility");
   useEffect(() => {
+    if (!documentVisibility) return;
+
     if (player.scoreForRound > 0 && player.playerId === yourPlayerId) {
       earnPointsAudio.play();
     }
@@ -44,12 +49,13 @@ export const Character: React.FC<CharacterProps> = ({
     }, 500);
     return () => clearTimeout(timer); // Clear the timer if the component unmounts
   }, [player.scoreForRound, player.totalScore]);
+
   return (
     <div
       className={`relative z-50 flex aspect-square w-full flex-col items-center justify-center rounded-3xl bg-black/0 p-4 font-black text-white`}
     >
       <PlayerDetails
-        playerName={playerName}
+        displayName={displayName}
         showScore={showScore}
         scoreForRound={player.scoreForRound}
       />

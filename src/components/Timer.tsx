@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from "react";
-
 const INTERVAL = 6;
 
 export const Timer = ({ game }) => {

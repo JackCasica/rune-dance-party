@@ -1,4 +1,12 @@
-export const StageCardBack = ({ color, shown }) => {
+type StageCardBackProps = {
+  color: string;
+  shown: boolean;
+};
+
+export const StageCardBack: React.FC<StageCardBackProps> = ({
+  color,
+  shown,
+}) => {
   return (
     <div
       className={`card__side card__side--back ${

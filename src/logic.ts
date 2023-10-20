@@ -5,7 +5,12 @@ declare global {
   const Rune: RuneClient<GameState, GameActions>;
 }
 
-const playerColors: string[] = ["pink", "purple", "orange", "yellow"];
+const playerColors: string[] = [
+  "bg-ronchi",
+  "bg-willpower-orange",
+  "bg-vivid-raspberry",
+  "bg-blue-purple",
+];
 const generatedCardStack = generateCardStack(10);
 
 Rune.initLogic({
@@ -146,7 +151,6 @@ Rune.initLogic({
 
       const scoreForRound = player.limbs.reduce(
         (pointsForRound, limbPose, i) => {
-          console.log(limbPose, game.activeCard?.limbs[i], "🔴");
           const poseMatchesCard = limbPose === game.activeCard?.limbs[i];
           return poseMatchesCard ? pointsForRound + 1 : pointsForRound;
         },

@@ -1,14 +1,15 @@
 import React from "react";
+
 import type { PlayerDetailsProps } from "../types/types";
 export const PlayerDetails: React.FC<PlayerDetailsProps> = ({
-  playerName,
+  displayName,
   scoreForRound,
   showScore,
 }) => {
   return (
     <>
       <span className="text-shadow absolute top-[20%] -translate-y-1/2">
-        {playerName}
+        {displayName}
       </span>
       <span
         className={`stroke-text absolute right-0 top-0 font-black transition-all duration-200 ${

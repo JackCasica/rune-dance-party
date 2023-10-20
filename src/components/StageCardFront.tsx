@@ -1,4 +1,12 @@
-export const StageCardFront = ({ limbs, shown }) => {
+type StageCardFrontProps = {
+  limbs: number[];
+  shown: boolean;
+};
+
+export const StageCardFront: React.FC<StageCardFrontProps> = ({
+  limbs,
+  shown,
+}) => {
   return (
     <div
       className={`card__side card__side--front ${

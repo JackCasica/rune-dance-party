@@ -1,44 +1,31 @@
-import { Cards } from "./components/Cards.tsx";
 import { Character } from "./components/Character.tsx";
 import { Controls } from "./components/Controls.tsx";
 import { DanceFloor } from "./components/DanceFloor.tsx";
+import { Deck } from "./components/Deck.tsx";
 import { useGame } from "./hooks/useGame.ts";
 
 import type { Player } from "./types/types.ts";
 import { useState, useEffect } from "react";
-import backgroundMusic from "./assets/purple-soda.mp3";
-import win from "./assets/game-over.wav";
-import lose from "./assets/lose.wav";
-import { Card } from "./components/Card.tsx";
-import { CardProps } from "./types/types.ts";
+
 import pageTurn from "./assets/page turn.wav";
 import { Timer } from "./components/Timer.tsx";
 import { Howl } from "howler";
 import { playGameOverSound } from "./util/playGameOverSound.ts";
+import { useBackgroundMusic } from "./hooks/useBackgroundMusic.ts";
 
-const backgroundMusicAudio = new Howl({
-  src: [backgroundMusic],
-});
 
 const pageTurnAudio = new Howl({
   src: [pageTurn],
-});
-
-const winAudio = new Howl({
-  src: [win],
-});
-
-const loseAudio = new Howl({
-  src: [lose],
 });
 
 const ROUND_INTERVAL = 6; // THIS IS THE AMOUNT OF TIME IN A ROUND, IN SECONDS
 
 function App() {
   const [activeCardIndex, setActiveCardIndex] = useState<number>(0);
-  const [appIsVisible, setAppIsVisible] = useState<boolean>(true);
+  // const [appIsVisible, setAppIsVisible] = useState<boolean>(true);
   /* THIS IS THE GAME DATA FROM SERVER. PASS THIS TO COMPONENTS THAT NEED GAME STATE DATA, ETC */
   const game = useGame();
+  const backgroundMusicAudio = useBackgroundMusic();
 
   if (game?.newGame.gameOver) {
     backgroundMusicAudio.pause();
@@ -51,35 +38,12 @@ function App() {
   );
 
   useEffect(() => {
-    const playMusicOnce = () => {
-      backgroundMusicAudio.play();
-      window.removeEventListener("touchstart", playMusicOnce);
-    };
-
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        backgroundMusicAudio.pause();
-        setAppIsVisible(false);
-      } else {
-        backgroundMusicAudio.play();
-      }
-    };
-
-    window.addEventListener("touchstart", playMusicOnce);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      window.removeEventListener("touchstart", playMusicOnce);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, []);
-
-  useEffect(() => {
-    Rune.actions.setActiveCard({ activeCardIndex: activeCardIndex });
     const progress = game?.newGame.progress;
     const roundOver = progress % ROUND_INTERVAL === 0;
     const stillTimeRemaining = progress < 59;
     const notFirstRound = progress > 0;
+
+    Rune.actions.setActiveCard({ activeCardIndex: activeCardIndex });
 
     if (roundOver && stillTimeRemaining && notFirstRound) {
       Rune.actions.setScoreForRound();
@@ -94,10 +58,6 @@ function App() {
     }
   }, [game?.newGame.remainingTime]);
 
-  if (!appIsVisible) {
-    return;
-  }
-
   return (
     <>
       {game && (
@@ -106,40 +66,23 @@ function App() {
             {game.newGame.players.map((player: Player, i) => (
               <Character
                 key={player.playerId}
-                playerName={player.displayName}
+                displayName={player.displayName}
                 player={player}
                 yourPlayerId={game.yourPlayerId}
                 currentRound={game.newGame.currentRound}
-                playerIndex={i}
               />
             ))}
-            <Cards>
-              {game.newGame.cardStack.map((cardItem: CardProps, i: number) => {
-                return (
-                  <Card
-                    activeCardIndex={activeCardIndex}
-                    key={`stage-cards-${i}`}
-                    index={i}
-                    color={cardItem.color}
-                    rotate={i === activeCardIndex ? "0deg" : `${i * 5 + 10}deg`}
-                    z={
-                      i === activeCardIndex
-                        ? "50"
-                        : `${game.newGame.cardStack.length - i}`
-                    } // REVERSE OF INDEX
-                    limbs={cardItem.limbs}
-                    predictor={player.predictor}
-                    shown={
-                      i === activeCardIndex
-                        ? true
-                        : player.predictor && i === activeCardIndex + 1
-                    }
-                  />
-                );
-              })}
-            </Cards>
+            <Deck
+              game={game}
+              activeCardIndex={activeCardIndex}
+              player={player}
+            />
           </DanceFloor>
-          <Controls game={game} activeCardIndex={activeCardIndex} />
+          <Controls
+            game={game}
+            player={player}
+            activeCardIndex={activeCardIndex}
+          />
           <Timer game={game} />
         </main>
       )}
