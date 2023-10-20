@@ -1,7 +1,8 @@
-import { Player } from "./types";
-import { PlayerDetails } from "./../components/PlayerDetails";
 import { ActiveCard } from "./../components/ActiveCard";
+
 import { Card } from "./../components/Card";
+import { PlayerDetails } from "./../components/PlayerDetails";
+import { Player } from "./types";
 
 // export type Limb = "left arm" | "right arm" | "left leg" | "right leg";
 export enum LimbEnum {
@@ -12,6 +13,7 @@ export enum LimbEnum {
 }
 
 export type StageCardProps = {
+  activeCardIndex: number;
   color: string;
   leftOffset?: string;
   z?: string;
@@ -78,7 +80,7 @@ export enum LimbPose {
 export type Player = {
   playerId: string;
   playerColor: string;
-  score: number;
+  totalScore: number;
   scoreForRound: number;
   index?: number;
   limbs: LimbEnum[];
@@ -100,6 +102,7 @@ export type CardsProps = {
 export interface GameState {
   count: number;
   currentPlayerIndex?: number;
+  progress: number;
   remainingTime?: number;
   currentRound: number;
   activeCard: CardProps | null;
@@ -119,8 +122,11 @@ export type GameActions = {
   toggleAutoLimb: (params: { isActive: boolean; index?: number }) => void;
   togglePredictor: (params: { isActive: boolean }) => void;
   toggleLimb: (params: { limb: LimbEnum }) => void;
-  checkPlayerPoses: (params: { index: number }) => void;
+  setScoreForRound: () => void;
+  setPlayerTotalScore: () => void;
+  setPlayerStreak: () => void;
   setWinner: () => void;
+  setActiveCard: (params: { activeCardIndex: number }) => void;
 };
 
 export type CharacterProps = {

@@ -37,13 +37,13 @@ export const Character: React.FC<CharacterProps> = ({
       noPointsAudio.play();
     }
 
-    player.score !== 0 && setShowScore(true);
+    player.totalScore !== 0 && setShowScore(true);
 
     const timer = setTimeout(() => {
       setShowScore(false);
     }, 500);
     return () => clearTimeout(timer); // Clear the timer if the component unmounts
-  }, [player.scoreForRound, player.score]);
+  }, [player.scoreForRound, player.totalScore]);
   return (
     <div
       className={`relative z-50 flex aspect-square w-full flex-col items-center justify-center rounded-3xl bg-black/0 p-4 font-black text-white`}
