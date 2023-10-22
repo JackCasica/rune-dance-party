@@ -1,6 +1,8 @@
 import type { RuneClient } from "rune-games-sdk/multiplayer";
 import { GameState, GameActions, Player, LimbEnum } from "./types/types";
 import { generateCardStack } from "./util/generateCardStack";
+import { getPlayerState } from "./util/getPlayerState";
+import { getWinner } from "./util/getWinner";
 declare global {
   const Rune: RuneClient<GameState, GameActions>;
 }
@@ -11,6 +13,20 @@ const playerColors: string[] = [
   "bg-vivid-raspberry",
   "bg-blue-purple",
 ];
+
+// const playerPositions: string[] = [
+//   "-translate-x-full -translate-y-full fixed ",
+//   "-translate-y-full translate-x-0 fixed",
+//   "-translate-x-full translate-y-full fixed",
+//   "translate-x-0 translate-y-full fixed ",
+// ];
+const playerPositions: string[] = [
+  "top-left",
+  "top-right",
+  "bottom-left",
+  "bottom-right",
+];
+
 const generatedCardStack = generateCardStack(10);
 
 Rune.initLogic({
@@ -43,13 +59,14 @@ Rune.initLogic({
         key: playerId,
         playerId: playerId,
         playerColor: playerColors[i],
+        playerPosition: playerPositions[i],
         limbs: [1, 1, 1, 1],
         controlsOrder: ["Left Arm", "Left Leg", "Right Leg", "Right Arm"],
         scoreForRound: 0,
         totalScore: 0,
         correctStreak: 0,
         autoLimb: false,
-        predictor: false,
+        attract: false,
       })),
     };
   },
@@ -88,46 +105,54 @@ Rune.initLogic({
       });
     },
 
-    // THIS ACTION SHOWS THE NEXT CARD FOR THE PLAYER WHO INITIATED THE ACTION
-    togglePredictor({ isActive }, { game, playerId: initiatingPlayerId }) {
-      const initiatingPlayer =
-        game.players[
-          game.players.findIndex(
-            (player: Player) => player.playerId === initiatingPlayerId,
-          )
+    // THIS ACTION RESETS THE SHUFFLED CONTROLS FOR ALL PLAYERS
+    resetShuffledControls: (_, { game }) => {
+      game.players.forEach((player) => {
+        player.controlsOrder = [
+          "Left Arm",
+          "Left Leg",
+          "Right Leg",
+          "Right Arm",
         ];
-
-      initiatingPlayer.predictor = isActive;
+      });
     },
 
-    // THIS ACTION SETS A SINGLE LIMB TO THE CORRECT POSITION FOR THE PLAYER WHO INITIATED THE ACTION
+    // THIS ACTION RESETS THE AUTO LIMB EFFECT FOR ALL PLAYERS
+    resetAutoLimb: (_, { game }) => {
+      game.players.forEach((player) => {
+        player.autoLimb = false;
+      });
+    },
+
+    // THIS ACTION RESETS THE ATTRACT EFFECT FOR ALL PLAYERS
+    resetAttract: (_, { game }) => {
+      game.players.forEach((player) => {
+        player.attract = false;
+      });
+    },
+
+    // THIS ACTION SHOWS THE NEXT CARD FOR THE PLAYER WHO INITIATED THE ACTION
+    toggleAttract(_, { game, playerId: initiatingPlayerId }) {
+      const initiatingPlayer = getPlayerState(game, initiatingPlayerId);
+      initiatingPlayer.attract = true;
+    },
+
+    // THIS ACTION SETS A SINGLE LIMB TO THE CORRECT POSITION FOR THE PLAYER WHO INITIATED THE ACTION AND SETS THE AUTO LIMB PROPERTY TO TRUE
     toggleAutoLimb: (
-      { isActive, index },
+      { activeCardIndex },
       { game, playerId: initiatingPlayerId },
     ) => {
-      const initiatingPlayer =
-        game.players[
-          game.players.findIndex(
-            (player: Player) => player.playerId === initiatingPlayerId,
-          )
-        ];
-      initiatingPlayer.autoLimb = isActive;
+      const initiatingPlayer = getPlayerState(game, initiatingPlayerId);
+      initiatingPlayer.autoLimb = true;
 
-      if (isActive === true && index) {
-        initiatingPlayer.limbs[LimbEnum.LeftArm] =
-          game.cardStack[index].limbs[0];
-      }
+      initiatingPlayer.limbs[LimbEnum.LeftArm] =
+        game.cardStack[activeCardIndex].limbs[LimbEnum.LeftArm];
     },
 
     // THIS ACTION SUBTRACTS A PASSED IN COST FROM THE CORRECT STREAK OF THE PLAYER WHO INITIATED THE ACTION
-    subtractStreak: (cost, { game, playerId: initiatingPlayerId }) => {
-      const initiatingPlayer =
-        game.players[
-          game.players.findIndex(
-            (player: Player) => player.playerId === initiatingPlayerId,
-          )
-        ];
-      initiatingPlayer.correctStreak -= cost;
+    resetStreak: (_, { game, playerId: initiatingPlayerId }) => {
+      const initiatingPlayer = getPlayerState(game, initiatingPlayerId);
+      initiatingPlayer.correctStreak = 0;
     },
 
     // THIS ACTION CHANGES THE POSITION OF THE LIMB FOR THE PLAYER WHO INITIATED THE ACTION
@@ -143,46 +168,30 @@ Rune.initLogic({
     },
 
     // THIS ACTION CHECKS THE POSES OF EACH PLAYER AGAINST THE FRONTMOST CARD IN THE CARDSTACK, THEN UPDATES THE SCORE PROPERTY FOR EACH PLAYER
-    setScoreForRound: (_, { game, playerId: initiatingPlayerId }) => {
-      const initiatingPlayerIndex = game.players.findIndex(
-        (player: Player) => player.playerId === initiatingPlayerId,
-      );
-      const player = game.players[initiatingPlayerIndex];
+    setPlayerScoresForRound: (_, { game }) => {
+      game.players.forEach((player) => {
+        const scoreForRound = player.limbs.reduce(
+          (pointsForRound, limbPose, i) => {
+            const poseMatchesCard = limbPose === game.activeCard?.limbs[i];
+            return poseMatchesCard ? pointsForRound + 1 : pointsForRound;
+          },
+          0,
+        );
 
-      const scoreForRound = player.limbs.reduce(
-        (pointsForRound, limbPose, i) => {
-          const poseMatchesCard = limbPose === game.activeCard?.limbs[i];
-          return poseMatchesCard ? pointsForRound + 1 : pointsForRound;
-        },
-        0,
-      );
-
-      // if the player got a perfect score this round, increase streak by 1 else reset to 0
-      // player.totalScore + score == player.totalScore + 4 && player.correctStreak++;
-
-      player.scoreForRound = scoreForRound;
-      return "hello";
+        player.scoreForRound = scoreForRound;
+      });
     },
     setPlayerTotalScore: (_, { game, playerId: initiatingPlayerId }) => {
-      const initiatingPlayerIndex = game.players.findIndex(
-        (player: Player) => player.playerId === initiatingPlayerId,
-      );
-      const player = game.players[initiatingPlayerIndex];
-
+      const player = getPlayerState(game, initiatingPlayerId);
       player.totalScore = player.totalScore + player.scoreForRound;
     },
 
+    // THIS ACTION CHECKS THE PLAYERS SCORE FOR THE ROUND AND INCREMENTS THE CORRECT STREAK PROPERTY IF THE PLAYER SCORED 4 POINTS
     setPlayerStreak: (_, { game, playerId: initiatingPlayerId }) => {
-      const initiatingPlayerIndex = game.players.findIndex(
-        (player: Player) => player.playerId === initiatingPlayerId,
-      );
-      const player = game.players[initiatingPlayerIndex];
-
+      const player = getPlayerState(game, initiatingPlayerId);
       player.totalScore + player.scoreForRound === player.totalScore + 4
         ? player.correctStreak++
         : (player.correctStreak = 0);
-
-      //
     },
 
     // THIS ACTIONS SETS THE WINNER PROPERTY OF THE GAME STATE TO THE PLAYER WITH THE HIGHEST SCORE
@@ -213,14 +222,7 @@ Rune.initLogic({
     if (game.remainingTime === 0) {
       game.gameOver = true;
 
-      const winner = game.players.reduce(
-        (highestScoringPlayer, currentPlayer) => {
-          return currentPlayer.totalScore > highestScoringPlayer.totalScore
-            ? currentPlayer
-            : highestScoringPlayer;
-        },
-        game.players[0],
-      );
+      const winner = getWinner(game.players);
 
       game.winner = winner.playerId;
       Rune.gameOver({

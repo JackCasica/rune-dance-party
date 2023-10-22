@@ -12,7 +12,8 @@ import { Timer } from "./components/Timer.tsx";
 import { Howl } from "howler";
 import { playGameOverSound } from "./util/playGameOverSound.ts";
 import { useBackgroundMusic } from "./hooks/useBackgroundMusic.ts";
-
+import { useDocumentVisibility } from "./hooks/useDocumentVisibility.ts";
+import { resetPowerups } from "./util/resetPowerups.ts";
 
 const pageTurnAudio = new Howl({
   src: [pageTurn],
@@ -26,6 +27,7 @@ function App() {
   /* THIS IS THE GAME DATA FROM SERVER. PASS THIS TO COMPONENTS THAT NEED GAME STATE DATA, ETC */
   const game = useGame();
   const backgroundMusicAudio = useBackgroundMusic();
+  const documentVisibility = useDocumentVisibility();
 
   if (game?.newGame.gameOver) {
     backgroundMusicAudio.pause();
@@ -42,19 +44,27 @@ function App() {
     const roundOver = progress % ROUND_INTERVAL === 0;
     const stillTimeRemaining = progress < 59;
     const notFirstRound = progress > 0;
-
+    const stillCardsRemaining = game?.newGame.cardStack.slice(1).length > 0;
     Rune.actions.setActiveCard({ activeCardIndex: activeCardIndex });
 
     if (roundOver && stillTimeRemaining && notFirstRound) {
-      Rune.actions.setScoreForRound();
-      Rune.actions.setPlayerStreak();
+      // resetPowerups();
+      Rune.actions.setPlayerScoresForRound();
       Rune.actions.setPlayerTotalScore();
+      Rune.actions.setPlayerStreak();
+      Rune.actions.resetShuffledControls();
+      Rune.actions.resetAutoLimb();
+      Rune.actions.resetAttract();
 
-      if (game.newGame.cardStack.slice(1).length > 0) {
+      if (stillCardsRemaining) {
         setActiveCardIndex((prev: number) => prev + 1);
       }
+
       Rune.actions.incrementRoundNumber();
-      player.playerId === game.yourPlayerId && pageTurnAudio.play();
+
+      documentVisibility &&
+        player.playerId === game.yourPlayerId &&
+        pageTurnAudio.play();
     }
   }, [game?.newGame.remainingTime]);
 

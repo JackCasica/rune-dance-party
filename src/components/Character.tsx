@@ -27,13 +27,13 @@ export const Character: React.FC<CharacterProps> = ({
   const [showScore, setShowScore] = useState(false);
   const documentVisibility = useDocumentVisibility();
 
-  console.log(documentVisibility, "documentVisibility");
   useEffect(() => {
-    if (!documentVisibility) return;
+    // if (!documentVisibility) return;
 
     if (player.scoreForRound > 0 && player.playerId === yourPlayerId) {
       earnPointsAudio.play();
     }
+
     if (
       currentRound !== 1 &&
       player.scoreForRound === 0 &&
@@ -47,6 +47,7 @@ export const Character: React.FC<CharacterProps> = ({
     const timer = setTimeout(() => {
       setShowScore(false);
     }, 500);
+
     return () => clearTimeout(timer); // Clear the timer if the component unmounts
   }, [player.scoreForRound, player.totalScore]);
 
@@ -59,7 +60,8 @@ export const Character: React.FC<CharacterProps> = ({
         showScore={showScore}
         scoreForRound={player.scoreForRound}
       />
-      <Body player={player}>
+
+      <Body player={player} currentRound={currentRound}>
         <Limb limb={LimbEnum.LeftArm} player={player} />
         <Limb limb={LimbEnum.RightArm} player={player} />
         <Limb limb={LimbEnum.LeftLeg} player={player} />

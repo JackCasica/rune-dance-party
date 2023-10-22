@@ -1,5 +1,5 @@
 import { ActiveCard } from "./../components/ActiveCard";
-import { act } from 'react-dom/test-utils';
+import { act } from "react-dom/test-utils";
 
 import { Card } from "./../components/Card";
 import { PlayerDetails } from "./../components/PlayerDetails";
@@ -28,7 +28,8 @@ export type StageCardProps = {
   shown: boolean;
   index: number;
   rotate?: string;
-  predictor?: boolean;
+  attract?: boolean;
+  playerPosition?: string;
 };
 
 export type PlayerDetailsProps = {
@@ -97,8 +98,9 @@ export type Player = {
   correctStreak: number;
   controlsOrder: string[];
   autoLimb: boolean;
-  predictor: boolean;
+  attract: boolean;
   displayName?: string;
+  playerPosition?: string;
 };
 
 export type CardProps = {
@@ -129,17 +131,20 @@ export interface GameState {
 export type GameActions = {
   getStreak?: () => number;
   incrementRoundNumber: () => void;
-  subtractStreak: (cost: number) => void;
+  resetStreak: () => void;
   updateActiveCard: (index: number) => void;
   shuffleEnemyControls: () => void;
-  toggleAutoLimb: (params: { isActive: boolean; index?: number }) => void;
-  togglePredictor: (params: { isActive: boolean }) => void;
+  toggleAutoLimb: (params: { activeCardIndex: number }) => void;
+  toggleAttract: () => void;
   toggleLimb: (params: { limb: LimbEnum }) => void;
-  setScoreForRound: () => void;
+  setPlayerScoresForRound: () => void;
   setPlayerTotalScore: () => void;
   setPlayerStreak: () => void;
   setWinner: () => void;
   setActiveCard: (params: { activeCardIndex: number }) => void;
+  resetShuffledControls: () => void;
+  resetAutoLimb: () => void;
+  resetAttract: () => void;
 };
 
 export type CharacterProps = {
@@ -168,7 +173,7 @@ export type BodyProps = {
 export type PowerUpsProps = {
   children?: React.ReactNode;
   game?: any;
-  player?: Player;
+  player: Player;
   activeCardIndex: number;
 };
 

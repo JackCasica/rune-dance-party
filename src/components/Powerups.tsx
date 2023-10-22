@@ -7,22 +7,21 @@ import spellWaves from "../assets/spell waves.wav";
 import type { PowerUpsProps, Player } from "../types/types";
 
 import { playSound } from "../util/playSound";
-import { useManagePowerups } from "../hooks/useManagePowerups";
+// import { useManagePowerups } from "../hooks/useManagePowerups";
 import { PowerUpButton } from "./PowerUpButton";
 
 export const Powerups: React.FC<PowerUpsProps> = ({
   game,
   activeCardIndex,
+  player,
 }) => {
   const { controlsOrder: oldControlsOrder } = game.oldGame.players.find(
     (player: Player) => player.playerId === game.yourPlayerId,
   );
 
-  useManagePowerups(game);
+  // useManagePowerups(game);
 
-  const { correctStreak, controlsOrder } = game?.newGame?.players.find(
-    (player: Player) => player.playerId === game.yourPlayerId,
-  );
+  const { correctStreak, controlsOrder } = player;
 
   const runPowerup = (powerup: string, audio: string, cost: number) => {
     if (correctStreak >= cost) {
@@ -31,28 +30,29 @@ export const Powerups: React.FC<PowerUpsProps> = ({
         case "shuffle":
           Rune.actions.shuffleEnemyControls();
           break;
-        case "predictor":
-          Rune.actions.togglePredictor({ isActive: true });
+        case "attract":
+          Rune.actions.toggleAttract();
           break;
         case "autoLimb":
           Rune.actions.toggleAutoLimb({
-            isActive: true,
-            index: activeCardIndex,
+            activeCardIndex: activeCardIndex,
           });
           break;
       }
 
-      Rune.actions.subtractStreak(cost);
+      Rune.actions.resetStreak();
+      console.log(correctStreak);
     }
   };
 
   useEffect(() => {
-    if (
+    const playerControlsShuffled =
       oldControlsOrder[0] !== controlsOrder[0] ||
       oldControlsOrder[1] !== controlsOrder[1] ||
       oldControlsOrder[2] !== controlsOrder[2] ||
-      oldControlsOrder[3] !== controlsOrder[3]
-    ) {
+      oldControlsOrder[3] !== controlsOrder[3];
+
+    if (playerControlsShuffled) {
       playSound(shuffle);
     }
   }, [controlsOrder, oldControlsOrder]);
@@ -64,16 +64,8 @@ export const Powerups: React.FC<PowerUpsProps> = ({
   return (
     <div className="flex h-fit gap-2 bg-black/0">
       <PowerUpButton
-        powerUp="shuffle"
-        imageSource="/shuffle.png"
-        soundEffect={shuffle}
-        correctStreak={correctStreak}
-        cost={1}
-        onClickHandler={runPowerup}
-      />
-      <PowerUpButton
-        powerUp="predictor"
-        imageSource="/predictor.png"
+        powerUp="attract"
+        imageSource="/attract.png"
         soundEffect={revealBonus}
         correctStreak={correctStreak}
         cost={1}
@@ -83,6 +75,14 @@ export const Powerups: React.FC<PowerUpsProps> = ({
         powerUp="autoLimb"
         imageSource="/auto-limb.png"
         soundEffect={revealBonus}
+        correctStreak={correctStreak}
+        cost={1}
+        onClickHandler={runPowerup}
+      />
+      <PowerUpButton
+        powerUp="shuffle"
+        imageSource="/shuffle.png"
+        soundEffect={shuffle}
         correctStreak={correctStreak}
         cost={2}
         onClickHandler={runPowerup}

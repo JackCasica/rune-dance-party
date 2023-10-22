@@ -9,7 +9,7 @@ export const Deck: React.FC<DeckProps> = ({
   player,
 }) => {
   return (
-    <div className="absolute  overflow-visible rounded-full bg-pink-600 ">
+    <div className="absolute aspect-square w-1/2 rounded-full border-8 border-black bg-pink-600">
       {game.newGame.cardStack.map((cardItem: CardProps, i: number) => {
         return (
           <Card
@@ -24,12 +24,9 @@ export const Deck: React.FC<DeckProps> = ({
                 : `${game.newGame.cardStack.length - i}`
             } // REVERSE OF INDEX
             limbs={cardItem.limbs}
-            predictor={player.predictor}
-            shown={
-              i === activeCardIndex
-                ? true
-                : player.predictor && i === activeCardIndex + 1
-            }
+            attract={player.attract}
+            playerPosition={player.playerPosition}
+            shown={i === activeCardIndex}
           />
         );
       })}

@@ -15,7 +15,7 @@ export const Controls: React.FC<ControlsProps> = ({
   /* RENDERING OUT THE BOTTOM CONTROLS INCLUDING THE POWERS UPS, AND LIMB CONTROLS */
   return (
     <div className=" z-50 flex w-full flex-col  gap-2 bg-black/0 p-4">
-      <Powerups game={game} activeCardIndex={activeCardIndex} />
+      <Powerups game={game} activeCardIndex={activeCardIndex} player={player} />
       <LimbControls player={player} />
     </div>
   );

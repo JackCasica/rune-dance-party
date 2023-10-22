@@ -8,7 +8,7 @@ export const useManagePowerups = (game) => {
     // activates at round turnover, turns off powerups
     if (oldRound !== currentRound) {
       Rune.actions.toggleAutoLimb({ isActive: false });
-      Rune.actions.togglePredictor({ isActive: false });
+      Rune.actions.toggleAttract({ isActive: false });
     }
   }, [oldRound, currentRound]);
 

@@ -5,14 +5,13 @@ import { StageCardFront } from "./StageCardFront";
 import { StageCardBack } from "./StageCardBack";
 
 export const Card: React.FC<StageCardProps> = ({
-  activeCardIndex,
-  index,
   color,
   rotate,
-  predictor,
+  attract,
   z,
   limbs,
   shown,
+  playerPosition,
 }) => {
   const [colorNicer] = useState<Record<string, string>>({
     pink: "bg-vivid-raspberry",
@@ -21,13 +20,29 @@ export const Card: React.FC<StageCardProps> = ({
     purple: "bg-blue-purple",
   });
 
+  let cardPosition;
+  switch (playerPosition) {
+    case "top-left":
+      cardPosition = "fixed left-0 top-0";
+      break;
+    case "top-right":
+      cardPosition = "fixed right-0 top-0";
+      break;
+    case "bottom-left":
+      cardPosition = "fixed left-0 bottom-[21%]";
+      break;
+    case "bottom-right":
+      cardPosition = "fixed right-0 bottom-[21%]";
+      break;
+  }
+
   return (
     <div
       id="stage-card"
-      className={`card absolute left-1/2 top-1/2 h-[25vw] w-[20vw] -translate-x-1/2 transition-all ${
-        predictor && index === activeCardIndex + 1
-          ? "translate-x-0 translate-y-full -rotate-45"
-          : "-translate-y-1/2"
+      className={`card h-[25vw] w-[20vw]  transition-all ${
+        attract && shown
+          ? cardPosition
+          : "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
       }`}
       style={{
         zIndex: z,
