@@ -76,7 +76,10 @@ button:focus-visible {
 }
 
 .text-shadow {
-  text-shadow: 1px 3px 1px black;
+  text-shadow: 1px 3px 0px black;
+}
+.text-shadow-md {
+  text-shadow: 3px 3px 0px black;
 }
 
 .bobbing-animation {
@@ -125,4 +128,28 @@ button:focus-visible {
 
 .show-front {
   transform: rotateY(360deg); /* Rotate the back side on hover */
+}
+
+.attract-top-left {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.attrqact-top-right {
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+
+.attract-bottom-left {
+  position: fixed;
+  bottom: 22%;
+  left: 0;
+}
+
+.attract-bottom-right {
+  position: fixed;
+  bottom: 22%;
+  right: 0;
 }

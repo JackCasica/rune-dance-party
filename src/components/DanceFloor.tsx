@@ -1,12 +1,13 @@
 import React from "react";
+
 import { DanceFloorProps } from "../types/types";
 
 export const DanceFloor: React.FC<DanceFloorProps> = ({ children, game }) => {
-  const multiplayerLayout = game.newGame.players.length > 1;
+  const multiplayerLayout = game?.newGame?.players.length > 1;
 
   return (
     <div
-      className={`grid w-full flex-1  place-items-center gap-4 rounded-3xl bg-black/0 p-2 ${
+      className={`relative  grid w-full flex-1  place-items-center gap-16 self-center rounded-3xl  bg-black/10 md:w-3/4  ${
         multiplayerLayout && "grid-cols-2"
       } `}
     >

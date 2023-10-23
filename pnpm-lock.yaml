@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  howler:
+    specifier: ^2.2.3
+    version: 2.2.3
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -16,6 +19,9 @@ dependencies:
     version: 4.11.0
 
 devDependencies:
+  '@types/howler':
+    specifier: ^2.2.10
+    version: 2.2.10
   '@types/react':
     specifier: ^18.0.28
     version: 18.2.15
@@ -592,6 +598,10 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
+    dev: true
+
+  /@types/howler@2.2.10:
+    resolution: {integrity: sha512-MnDUQZBaDhIFTQATeO4tzOCBobtPjo2MmR0co70tMyk+HNUJB0loojn+PRkky7SrKzfvU90SqufIlQlCrtjr+A==}
     dev: true
 
   /@types/json-schema@7.0.12:
@@ -1407,6 +1417,10 @@ packages:
     dependencies:
       function-bind: 1.1.1
     dev: true
+
+  /howler@2.2.3:
+    resolution: {integrity: sha512-QM0FFkw0LRX1PR8pNzJVAY25JhIWvbKMBFM4gqk+QdV+kPXOhleWGCB6AiAF/goGjIHK2e/nIElplvjQwhr0jg==}
+    dev: false
 
   /ignore@4.0.6:
     resolution: {integrity: sha512-cyFDKrqc/YdcWFniJhzI42+AzS+gNwmUzOSFcRCQYwySuBBBy/KjuxWLZ/FHEH6Moq1NizMOBWyTcv8O4OZIMg==}

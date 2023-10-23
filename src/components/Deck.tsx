@@ -1,27 +1,31 @@
-import { StageCard } from "./StageCard";
-import { Card, DeckProps } from "../types/types";
+import React from "react";
 
-export const Deck: React.FC<DeckProps> = ({
-  children,
-  stageCards,
-  predictor,
-}) => {
+import { CardProps, DeckProps } from "../types/types";
+import { Card } from "./Card";
+
+export const Deck: React.FC<DeckProps> = ({ game, activeCardIndex }) => {
   return (
-    <div
-      id="deck"
-      className="relative " // ... like me
-    >
-      {stageCards.map((cardItem: Card, i: number) => (
-        <div key={`stage-cards-${i}`}>
-          <StageCard
+    <div className="absolute aspect-square w-1/2  rounded-full border-8 border-black bg-pink-600">
+      {game.newGame.cardStack.map((cardItem: CardProps, i: number) => {
+        return (
+          <Card
+            activeCardIndex={activeCardIndex}
+            key={`stage-cards-${i}`}
+            index={i}
             color={cardItem.color}
-            leftOffset={`${i * 10 + 2}px`}
-            z={`${stageCards.length - i}`}
+            rotate={i === activeCardIndex ? "0deg" : `${i * 5 + 10}deg`}
+            z={
+              i === activeCardIndex
+                ? "50"
+                : `${game.newGame.cardStack.length - i}`
+            } // REVERSE OF INDEX
             limbs={cardItem.limbs}
-            shown={predictor}
+            attractActive={game.newGame.attractActive}
+            shown={i === activeCardIndex}
+            game={game}
           />
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

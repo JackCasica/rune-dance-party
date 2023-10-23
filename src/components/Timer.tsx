@@ -1,33 +1,17 @@
-import React, { useEffect, useState } from "react";
+const INTERVAL = 6;
 
 export const Timer = ({ game }) => {
-  const [offset, setOffset] = useState(0);
-  const radius = 130;
-  const circumference = 2 * Math.PI * radius;
-
-  useEffect(() => {
-    const progress = game.newGame.remainingTime / 60;
-    const offsetValue = circumference - progress * circumference;
-    setOffset(offsetValue);
-  }, [game.newGame.remainingTime]);
+  const progress = 60 - game?.newGame.remainingTime;
+  const timeInRound = progress % INTERVAL;
 
   return (
-    <svg
-      width="100%"
-      height="100%"
-      className="absolute left-1/2 top-1/2  -translate-x-1/2 -translate-y-1/2"
-    >
-      <circle
-        stroke="black"
-        fill="transparent"
-        strokeWidth="200"
-        strokeDasharray={circumference}
-        strokeDashoffset={offset}
-        r={radius}
-        cx="50%"
-        cy="50%"
-        style={{ transition: "stroke-dashoffset 1s linear" }}
+    <div id="timer" className="absolute left-0 top-0  h-full w-full ">
+      <div
+        className="h-[1vh] w-full  bg-vivid-raspberry font-bold transition-all duration-1000 ease-linear "
+        style={{
+          width: `${timeInRound * 20}%`,
+        }}
       />
-    </svg>
+    </div>
   );
 };

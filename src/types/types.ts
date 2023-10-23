@@ -1,6 +1,3 @@
-import { ActiveCard } from "./../components/ActiveCard";
-
-// export type Limb = "left arm" | "right arm" | "left leg" | "right leg";
 export enum LimbEnum {
   LeftArm,
   RightArm,
@@ -8,17 +5,35 @@ export enum LimbEnum {
   RightLeg,
 }
 
+export enum PoseEnum {
+  Straight,
+  BentUp,
+  BentDown,
+}
 export type StageCardProps = {
+  activeCardIndex: number;
   color: string;
   leftOffset?: string;
   z?: string;
   active?: boolean;
   limbs: number[];
   shown: boolean;
+  index: number;
+  rotate?: string;
+  attract?: boolean;
+  attractActive: boolean;
+  game: any;
+};
+
+export type PlayerDetailsProps = {
+  children?: React.ReactNode;
+  showScore?: boolean;
+  displayName?: string;
+  scoreForRound?: number;
 };
 
 export type ActiveCardProps = {
-  activeCard: Card | null;
+  activeCard: CardProps | null;
 };
 
 export type StageContainerProps = {
@@ -30,30 +45,13 @@ export type ControlsProps = {
   children?: React.ReactNode;
   game?: any;
   playerId?: string;
-  player?: Player;
+  player: Player;
   yourPlayerId?: string;
   activeCardIndex: number;
+  controlsColor?: string;
 };
 
 export type DanceFloorProps = {
-  children?: React.ReactNode;
-  game?: GameState; // Replace 'any' with the actual type of your game state
-};
-
-export type RoundTimerProps = {
-  turnCard: Function;
-  game: any;
-  activeCardIndex: number;
-};
-
-export type StageProps = {
-  children?: React.ReactNode;
-  game: any;
-  activeCardIndex: number;
-  setActiveCardIndex: Function;
-};
-
-export type TimerProps = {
   children?: React.ReactNode;
   game: any; // Replace 'any' with the actual type of your game state
 };
@@ -67,51 +65,68 @@ export enum LimbPose {
 export type Player = {
   playerId: string;
   playerColor: string;
-  score: number;
+  totalScore: number;
   scoreForRound: number;
   index?: number;
   limbs: LimbEnum[];
   correctStreak: number;
   controlsOrder: string[];
   autoLimb: boolean;
-  predictor: boolean;
+  attract: boolean;
+  displayName?: string;
+  playerPosition?: string;
+  win: boolean;
 };
 
-export type Card = {
+export type CardProps = {
   color: string;
   limbs: LimbEnum[];
+};
+
+export type DeckProps = {
+  game: any;
+  activeCardIndex: number;
+  player: Player;
 };
 
 export interface GameState {
   count: number;
   currentPlayerIndex?: number;
+  progress: number;
   remainingTime?: number;
   currentRound: number;
-  activeCard: Card | null;
-  cardStack: Card[];
+  activeCard: CardProps | null;
+  cardStack: CardProps[];
   winner?: string | null;
   players: Player[];
   testNum?: number;
   gameOver: boolean;
+  attractActive: boolean;
 }
 
 export type GameActions = {
   getStreak?: () => number;
   incrementRoundNumber: () => void;
-  subtractStreak: (cost: number) => void;
-  updateActiveCard: (index: number) => void;
+  resetStreak: () => void;
   shuffleEnemyControls: () => void;
-  toggleAutoLimb: (params: { isActive: boolean; index?: number }) => void;
-  togglePredictor: (params: { isActive: boolean }) => void;
+  toggleAutoLimb: (params: { activeCardIndex: number }) => void;
+  toggleAttract: () => void;
   toggleLimb: (params: { limb: LimbEnum }) => void;
-  checkPlayerPoses: (params: { index: number }) => void;
+  setPlayerScoresForRound: () => void;
+  setPlayerTotalScore: () => void;
+  setPlayerStreak: () => void;
   setWinner: () => void;
+  setActiveCard: (params: { activeCardIndex: number }) => void;
+  resetShuffledControls: () => void;
+  resetAutoLimb: () => void;
+  resetAttract: () => void;
 };
 
 export type CharacterProps = {
   player: Player;
-  playerName: string;
+  displayName?: string;
   yourPlayerId: string;
+  currentRound: number;
 };
 
 export type LimbProps = {
@@ -128,16 +143,18 @@ export type LimbProps = {
 export type BodyProps = {
   children: React.ReactElement<LimbProps>[] | React.ReactElement<LimbProps>;
   player: Player;
+  currentRound: number;
 };
 
 export type PowerUpsProps = {
   children?: React.ReactNode;
   game?: any;
-  player?: Player;
+  player: Player;
   activeCardIndex: number;
 };
 
 export type LimbControlsProps = {
   children?: React.ReactNode;
   game?: any;
+  player: Player;
 };
