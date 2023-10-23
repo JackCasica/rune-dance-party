@@ -1,13 +1,9 @@
 import React, { useEffect } from "react";
-
 import revealBonus from "../assets/reveal bonus.wav";
 import shuffle from "../assets/shuffle.wav";
 import spellWaves from "../assets/spell waves.wav";
-
 import type { PowerUpsProps, Player } from "../types/types";
-
 import { playSound } from "../util/playSound";
-// import { useManagePowerups } from "../hooks/useManagePowerups";
 import { PowerUpButton } from "./PowerUpButton";
 
 export const Powerups: React.FC<PowerUpsProps> = ({
@@ -18,8 +14,6 @@ export const Powerups: React.FC<PowerUpsProps> = ({
   const { controlsOrder: oldControlsOrder } = game.oldGame.players.find(
     (player: Player) => player.playerId === game.yourPlayerId,
   );
-
-  // useManagePowerups(game);
 
   const { correctStreak, controlsOrder } = player;
 
@@ -41,7 +35,6 @@ export const Powerups: React.FC<PowerUpsProps> = ({
       }
 
       Rune.actions.resetStreak();
-      console.log(correctStreak);
     }
   };
 
@@ -76,7 +69,7 @@ export const Powerups: React.FC<PowerUpsProps> = ({
         imageSource="/auto-limb.png"
         soundEffect={revealBonus}
         correctStreak={correctStreak}
-        cost={1}
+        cost={2}
         onClickHandler={runPowerup}
       />
       <PowerUpButton
@@ -84,7 +77,7 @@ export const Powerups: React.FC<PowerUpsProps> = ({
         imageSource="/shuffle.png"
         soundEffect={shuffle}
         correctStreak={correctStreak}
-        cost={2}
+        cost={3}
         onClickHandler={runPowerup}
       />
     </div>

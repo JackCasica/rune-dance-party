@@ -1,11 +1,3 @@
-import { ActiveCard } from "./../components/ActiveCard";
-import { act } from "react-dom/test-utils";
-
-import { Card } from "./../components/Card";
-import { PlayerDetails } from "./../components/PlayerDetails";
-import { Player } from "./types";
-
-// export type Limb = "left arm" | "right arm" | "left leg" | "right leg";
 export enum LimbEnum {
   LeftArm,
   RightArm,
@@ -29,12 +21,12 @@ export type StageCardProps = {
   index: number;
   rotate?: string;
   attract?: boolean;
-  playerPosition?: string;
+  attractActive: boolean;
+  game: any;
 };
 
 export type PlayerDetailsProps = {
   children?: React.ReactNode;
-  player?: Player;
   showScore?: boolean;
   displayName?: string;
   scoreForRound?: number;
@@ -53,31 +45,13 @@ export type ControlsProps = {
   children?: React.ReactNode;
   game?: any;
   playerId?: string;
-  player?: Player;
+  player: Player;
   yourPlayerId?: string;
   activeCardIndex: number;
   controlsColor?: string;
 };
 
 export type DanceFloorProps = {
-  children?: React.ReactNode;
-  game?: GameState; // Replace 'any' with the actual type of your game state
-};
-
-export type RoundTimerProps = {
-  turnCard: Function;
-  game: any;
-  activeCardIndex: number;
-};
-
-export type StageProps = {
-  children?: React.ReactNode;
-  game: any;
-  activeCardIndex: number;
-  setActiveCardIndex: Function;
-};
-
-export type TimerProps = {
   children?: React.ReactNode;
   game: any; // Replace 'any' with the actual type of your game state
 };
@@ -101,6 +75,7 @@ export type Player = {
   attract: boolean;
   displayName?: string;
   playerPosition?: string;
+  win: boolean;
 };
 
 export type CardProps = {
@@ -126,13 +101,13 @@ export interface GameState {
   players: Player[];
   testNum?: number;
   gameOver: boolean;
+  attractActive: boolean;
 }
 
 export type GameActions = {
   getStreak?: () => number;
   incrementRoundNumber: () => void;
   resetStreak: () => void;
-  updateActiveCard: (index: number) => void;
   shuffleEnemyControls: () => void;
   toggleAutoLimb: (params: { activeCardIndex: number }) => void;
   toggleAttract: () => void;
@@ -168,6 +143,7 @@ export type LimbProps = {
 export type BodyProps = {
   children: React.ReactElement<LimbProps>[] | React.ReactElement<LimbProps>;
   player: Player;
+  currentRound: number;
 };
 
 export type PowerUpsProps = {

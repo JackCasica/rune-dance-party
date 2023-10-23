@@ -1,7 +1,7 @@
 import { Howl } from "howler";
 import { useEffect } from "react";
 
-import backgroundMusic from "../assets/purple-soda.mp3";
+import backgroundMusic from "../assets/background-music.mp3";
 
 const backgroundMusicAudio = new Howl({
   src: [backgroundMusic],

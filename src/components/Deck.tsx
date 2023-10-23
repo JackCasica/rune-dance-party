@@ -3,13 +3,9 @@ import React from "react";
 import { CardProps, DeckProps } from "../types/types";
 import { Card } from "./Card";
 
-export const Deck: React.FC<DeckProps> = ({
-  game,
-  activeCardIndex,
-  player,
-}) => {
+export const Deck: React.FC<DeckProps> = ({ game, activeCardIndex }) => {
   return (
-    <div className="absolute aspect-square w-1/2 rounded-full border-8 border-black bg-pink-600">
+    <div className="absolute aspect-square w-1/2  rounded-full border-8 border-black bg-pink-600">
       {game.newGame.cardStack.map((cardItem: CardProps, i: number) => {
         return (
           <Card
@@ -24,9 +20,9 @@ export const Deck: React.FC<DeckProps> = ({
                 : `${game.newGame.cardStack.length - i}`
             } // REVERSE OF INDEX
             limbs={cardItem.limbs}
-            attract={player.attract}
-            playerPosition={player.playerPosition}
+            attractActive={game.newGame.attractActive}
             shown={i === activeCardIndex}
+            game={game}
           />
         );
       })}

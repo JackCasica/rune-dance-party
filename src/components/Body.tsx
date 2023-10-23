@@ -12,12 +12,19 @@ export const Body: React.FC<BodyProps> = ({ children, player }) => {
     player.controlsOrder[1] !== "Left Leg" ||
     player.controlsOrder[2] !== "Right Leg" ||
     player.controlsOrder[3] !== "Right Arm";
+
   return (
     <div className="relative flex w-1/2 items-center justify-center rounded-full bg-black/0">
       <img
         src="/confusion.png"
-        className={`absolute -top-3/4 z-50 origin-bottom scale-0 transition-all duration-500 ${
+        className={`absolute -top-3/4 z-50 origin-bottom scale-0 transition-all duration-150 ${
           shuffledControls ? "bobbing-animation scale-100" : "scale-0 "
+        }`}
+      />
+      <img
+        src="/crown.png"
+        className={`absolute -top-3/4 z-50 origin-bottom scale-0 transition-all duration-500 ${
+          player.win ? "bobbing-animation scale-100" : "scale-0 "
         }`}
       />
 

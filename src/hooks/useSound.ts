@@ -1,14 +1,16 @@
 import { Howl } from "howler";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 export const useSound = (soundFile: string) => {
-  const sound = new Howl({
-    src: [soundFile],
-  });
+  const sound = useMemo(() => {
+    return new Howl({
+      src: [soundFile],
+    });
+  }, [soundFile]); // Only re-create if soundFile changes
 
   useEffect(() => {
     const handleVisibilityChange = () => {
-      document.hidden ? sound.pause() : sound.play();
+      document.hidden ? sound.mute(true) : sound.mute(false);
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -16,7 +18,7 @@ export const useSound = (soundFile: string) => {
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, []);
+  }, [sound]); // sound is now stable, useEffect won't re-run unnecessarily
 
   return sound;
 };

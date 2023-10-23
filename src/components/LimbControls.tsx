@@ -8,10 +8,10 @@ export const LimbControls: React.FC<LimbControlsProps> = ({ player }) => {
 
   return (
     <div
-      className={`flex h-3/4 w-full overflow-clip rounded-3xl border-8 border-black ${playerColor}`}
+      className={`flex h-full w-full overflow-clip rounded-3xl border-8 border-black ${playerColor}`}
     >
-      {controlsOrder.map((control: string) => (
-        <LimbButton control={control} autoLimbActive={autoLimb} />
+      {controlsOrder.map((control: string, index) => (
+        <LimbButton key={index} control={control} autoLimbActive={autoLimb} />
       ))}
     </div>
   );

@@ -7,7 +7,7 @@ export const DanceFloor: React.FC<DanceFloorProps> = ({ children, game }) => {
 
   return (
     <div
-      className={`relative  grid w-full  flex-1 place-items-center gap-16 rounded-3xl bg-black/0  ${
+      className={`relative  grid w-full flex-1  place-items-center gap-16 self-center rounded-3xl  bg-black/10 md:w-3/4  ${
         multiplayerLayout && "grid-cols-2"
       } `}
     >

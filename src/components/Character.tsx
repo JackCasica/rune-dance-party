@@ -1,22 +1,13 @@
-import { Howl } from "howler";
 import React from "react";
 import { useEffect, useState } from "react";
 
 import earnPoints from "../assets/earn-points.wav";
 import noPoints from "../assets/no-points.wav";
-import { useDocumentVisibility } from "../hooks/useDocumentVisibility";
 import { CharacterProps, LimbEnum } from "../types/types";
 import { Body } from "./Body";
 import { Limb } from "./Limb";
 import { PlayerDetails } from "./PlayerDetails";
-
-const earnPointsAudio = new Howl({
-  src: [earnPoints],
-});
-
-const noPointsAudio = new Howl({
-  src: [noPoints],
-});
+import { useSound } from "../hooks/useSound";
 
 export const Character: React.FC<CharacterProps> = ({
   displayName,
@@ -25,11 +16,10 @@ export const Character: React.FC<CharacterProps> = ({
   currentRound,
 }) => {
   const [showScore, setShowScore] = useState(false);
-  const documentVisibility = useDocumentVisibility();
+  const earnPointsAudio = useSound(earnPoints);
+  const noPointsAudio = useSound(noPoints);
 
   useEffect(() => {
-    // if (!documentVisibility) return;
-
     if (player.scoreForRound > 0 && player.playerId === yourPlayerId) {
       earnPointsAudio.play();
     }

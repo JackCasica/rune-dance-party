@@ -1,11 +1,7 @@
 import React from "react";
 import { LimbEnum } from "../types/types";
-import { Howl } from "howler";
 import interfaceClick from "../assets/interface click.wav";
-
-const interfaceClickAudio = new Howl({
-  src: [interfaceClick],
-});
+import { useSound } from "../hooks/useSound";
 
 type LimbButtonProps = {
   control: string;
@@ -16,6 +12,8 @@ export const LimbButton: React.FC<LimbButtonProps> = ({
   control,
   autoLimbActive,
 }) => {
+  const interfaceClickAudio = useSound(interfaceClick);
+
   const onClickHandler = (limb: LimbEnum) => {
     interfaceClickAudio.play(); /* THIS HAPPENS ONLY ON THE INITIATING PLAYERS DEVICE */
     /* TELLS SERVER TO UPDATE THE LIMB POSE FOR THE ACTIVATING PLAYER - SEE ACTIONS IN LOGIC.TS */
@@ -32,7 +30,9 @@ export const LimbButton: React.FC<LimbButtonProps> = ({
     ${autoLimbActive && control === "Left Arm" && "bg-slate-400"}`}
       onClick={
         autoLimbActive && control === "Left Arm"
-          ? () => {}
+          ? () => {
+              return;
+            }
           : () => {
               onClickHandler(
                 LimbEnum[control.replace(/\s+/g, "") as keyof typeof LimbEnum],
@@ -42,7 +42,7 @@ export const LimbButton: React.FC<LimbButtonProps> = ({
     >
       <img
         src={`/limb controls/${control} Control.png`}
-        className={`absolute left-1/2 top-1/2 w-3/4 -translate-x-1/2 -translate-y-1/2 p-2`}
+        className={`absolute left-1/2 top-1/2 w-3/4 -translate-x-1/2 -translate-y-1/2 p-2 md:w-1/3`}
       />
     </button>
   );

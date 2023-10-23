@@ -10,7 +10,6 @@ export const Controls: React.FC<ControlsProps> = ({
   game,
   player,
   activeCardIndex,
-  controlsColor,
 }) => {
   /* RENDERING OUT THE BOTTOM CONTROLS INCLUDING THE POWERS UPS, AND LIMB CONTROLS */
   return (

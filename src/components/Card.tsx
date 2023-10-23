@@ -3,15 +3,15 @@ import React, { useState } from "react";
 import type { StageCardProps } from "../types/types";
 import { StageCardFront } from "./StageCardFront";
 import { StageCardBack } from "./StageCardBack";
-
+import { Player } from "../types/types";
 export const Card: React.FC<StageCardProps> = ({
   color,
   rotate,
-  attract,
+  attractActive,
   z,
   limbs,
   shown,
-  playerPosition,
+  game,
 }) => {
   const [colorNicer] = useState<Record<string, string>>({
     pink: "bg-vivid-raspberry",
@@ -20,29 +20,17 @@ export const Card: React.FC<StageCardProps> = ({
     purple: "bg-blue-purple",
   });
 
-  let cardPosition;
-  switch (playerPosition) {
-    case "top-left":
-      cardPosition = "fixed left-0 top-0";
-      break;
-    case "top-right":
-      cardPosition = "fixed right-0 top-0";
-      break;
-    case "bottom-left":
-      cardPosition = "fixed left-0 bottom-[21%]";
-      break;
-    case "bottom-right":
-      cardPosition = "fixed right-0 bottom-[21%]";
-      break;
-  }
+  const attractedCardPosition = game.newGame.players.find(
+    (player: Player) => player.attract === true,
+  )?.attractedCardPosition;
 
   return (
     <div
       id="stage-card"
-      className={`card h-[25vw] w-[20vw]  transition-all ${
-        attract && shown
-          ? cardPosition
-          : "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+      className={`card   transition-all ${
+        attractActive && shown
+          ? attractedCardPosition
+          : "absolute left-1/2 top-1/2 h-[25vw] w-[20vw] -translate-x-1/2 -translate-y-1/2 md:h-[16vw] md:w-[12vw]"
       }`}
       style={{
         zIndex: z,

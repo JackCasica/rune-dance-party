@@ -2,7 +2,7 @@ import type { RuneClient } from "rune-games-sdk/multiplayer";
 import { GameState, GameActions, Player, LimbEnum } from "./types/types";
 import { generateCardStack } from "./util/generateCardStack";
 import { getPlayerState } from "./util/getPlayerState";
-import { getWinner } from "./util/getWinner";
+import { getWinners } from "./util/getWinner";
 declare global {
   const Rune: RuneClient<GameState, GameActions>;
 }
@@ -20,11 +20,11 @@ const playerColors: string[] = [
 //   "-translate-x-full translate-y-full fixed",
 //   "translate-x-0 translate-y-full fixed ",
 // ];
-const playerPositions: string[] = [
-  "top-left",
-  "top-right",
-  "bottom-left",
-  "bottom-right",
+const attractedCardPositions: string[] = [
+  "fixed left-0 top-0 h-[20vw] w-[16vw] ",
+  "fixed right-0 top-0 h-[20vw] w-[16vw] ",
+  "fixed left-0 bottom-[27%] h-[20vw] w-[16vw] ",
+  "fixed right-0 bottom-[27%] h-[20vw] w-[16vw] ",
 ];
 
 const generatedCardStack = generateCardStack(10);
@@ -41,6 +41,7 @@ Rune.initLogic({
       progress: 0,
       currentRound: 1,
       cardStack: generatedCardStack,
+      attractActive: false,
       // cardStack: [
       //   { color: "pink", limbs: [1, 3, 1, 2] },
       //   { color: "yellow", limbs: [2, 1, 2, 3] },
@@ -59,7 +60,7 @@ Rune.initLogic({
         key: playerId,
         playerId: playerId,
         playerColor: playerColors[i],
-        playerPosition: playerPositions[i],
+        attractedCardPosition: attractedCardPositions[i],
         limbs: [1, 1, 1, 1],
         controlsOrder: ["Left Arm", "Left Leg", "Right Leg", "Right Arm"],
         scoreForRound: 0,
@@ -67,6 +68,7 @@ Rune.initLogic({
         correctStreak: 0,
         autoLimb: false,
         attract: false,
+        win: false,
       })),
     };
   },
@@ -129,12 +131,19 @@ Rune.initLogic({
       game.players.forEach((player) => {
         player.attract = false;
       });
+
+      game.attractActive = false;
     },
 
-    // THIS ACTION SHOWS THE NEXT CARD FOR THE PLAYER WHO INITIATED THE ACTION
+    // THIS ACTION ATTRACTS THE CARD TO THE PLAYER WHO INITIATED THE ACTION. IT CAN OVERRIDE EXISTING ATTRACT EFFECTS ON OTHER PLAYERS
     toggleAttract(_, { game, playerId: initiatingPlayerId }) {
+      game.players.forEach((player) => {
+        player.attract = false;
+      });
+
       const initiatingPlayer = getPlayerState(game, initiatingPlayerId);
       initiatingPlayer.attract = true;
+      game.attractActive = true;
     },
 
     // THIS ACTION SETS A SINGLE LIMB TO THE CORRECT POSITION FOR THE PLAYER WHO INITIATED THE ACTION AND SETS THE AUTO LIMB PROPERTY TO TRUE
@@ -215,25 +224,40 @@ Rune.initLogic({
     },
   },
   // THIS UPDATE FUNCTION RUNS EVERY 1 SECOND AND UPDATES THE REMAINING TIME PROPERTY OF THE GAME STATE. IF THE REMAINING TIME IS 0, THE GAMEOVER PROPERTY IS SET TO TRUE AND THE WINNER PROPERTY IS SET TO THE PLAYER WITH THE HIGHEST SCORE
-  update: ({ game, allPlayerIds }) => {
+  update: ({ game }) => {
     game.progress = Rune.gameTimeInSeconds();
     game.remainingTime = 60 - game.progress;
+    game.gameOver = game.remainingTime === 0;
 
-    if (game.remainingTime === 0) {
-      game.gameOver = true;
-
-      const winner = getWinner(game.players);
-
-      game.winner = winner.playerId;
-      Rune.gameOver({
-        players: {
-          [game.players[0].playerId]: game.players[0].totalScore,
-          [game.players[1].playerId]: game.players[1].totalScore,
-          [game.players[2].playerId]: game.players[2].totalScore,
-          [game.players[3].playerId]: game.players[3].totalScore,
-        },
-        delayPopUp: false,
+    if (game.gameOver) {
+      const winners = getWinners(game.players);
+      winners.forEach((winner) => {
+        winner.win = true;
       });
+
+      const multipleWinners = winners.length > 1;
+      if (!multipleWinners) {
+        Rune.gameOver({
+          players: game.players.reduce(
+            (acc, player) => ({ ...acc, [player.playerId]: player.totalScore }),
+            {},
+          ),
+          delayPopUp: false,
+        });
+      }
+
+      if (multipleWinners) {
+        Rune.gameOver({
+          players: game.players.reduce(
+            (acc, player) => ({
+              ...acc,
+              [player.playerId]: player.win ? "WON" : "LOST",
+            }),
+            {},
+          ),
+          delayPopUp: false,
+        });
+      }
     }
   },
 });
