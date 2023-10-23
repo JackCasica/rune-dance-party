@@ -3,8 +3,8 @@ import revealBonus from "../assets/reveal bonus.wav";
 import shuffle from "../assets/shuffle.wav";
 import spellWaves from "../assets/spell waves.wav";
 import type { PowerUpsProps, Player } from "../types/types";
-import { playSound } from "../util/playSound";
 import { PowerUpButton } from "./PowerUpButton";
+import { useSound } from "../hooks/useSound";
 
 export const Powerups: React.FC<PowerUpsProps> = ({
   game,
@@ -16,18 +16,23 @@ export const Powerups: React.FC<PowerUpsProps> = ({
   );
 
   const { correctStreak, controlsOrder } = player;
+  const shuffleAudio = useSound(shuffle);
+  const spellWavesAudio = useSound(spellWaves);
+  const revealBonusAudio = useSound(revealBonus);
 
   const runPowerup = (powerup: string, audio: string, cost: number) => {
     if (correctStreak >= cost) {
-      playSound(audio);
       switch (powerup) {
         case "shuffle":
+          shuffleAudio.play();
           Rune.actions.shuffleEnemyControls();
           break;
         case "attract":
+          revealBonusAudio.play();
           Rune.actions.toggleAttract();
           break;
         case "autoLimb":
+          revealBonusAudio.play();
           Rune.actions.toggleAutoLimb({
             activeCardIndex: activeCardIndex,
           });
@@ -46,12 +51,12 @@ export const Powerups: React.FC<PowerUpsProps> = ({
       oldControlsOrder[3] !== controlsOrder[3];
 
     if (playerControlsShuffled) {
-      playSound(shuffle);
+      shuffleAudio.play();
     }
   }, [controlsOrder, oldControlsOrder]);
 
   useEffect(() => {
-    correctStreak >= 1 || (correctStreak >= 2 && playSound(spellWaves));
+    correctStreak >= 1 || (correctStreak >= 2 && spellWavesAudio.play());
   }, [correctStreak]);
 
   return (
