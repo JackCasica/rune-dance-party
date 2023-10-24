@@ -6,13 +6,12 @@ type PowerUpButtonProps = {
   soundEffect: string;
   correctStreak: number;
   cost: number;
-  onClickHandler: (powerUp: string, soundEffect: string, cost: number) => void;
+  onClickHandler: (powerUp: string, cost: number) => void;
 };
 
 export const PowerUpButton: React.FC<PowerUpButtonProps> = ({
   powerUp,
   imageSource,
-  soundEffect,
   correctStreak,
   cost,
   onClickHandler,
@@ -20,7 +19,7 @@ export const PowerUpButton: React.FC<PowerUpButtonProps> = ({
   return (
     <button
       onClick={() => {
-        onClickHandler(powerUp, soundEffect, cost);
+        onClickHandler(powerUp, cost);
       }}
       className={`relative flex  w-3/4 items-center justify-center rounded-3xl border-8 border-black p-2 text-sm font-black hover:cursor-pointer ${
         (correctStreak >= 1 && cost === 1) ||

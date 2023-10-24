@@ -20,7 +20,7 @@ export const Powerups: React.FC<PowerUpsProps> = ({
   const spellWavesAudio = useSound(spellWaves);
   const revealBonusAudio = useSound(revealBonus);
 
-  const runPowerup = (powerup: string, audio: string, cost: number) => {
+  const runPowerup = (powerup: string, cost: number) => {
     if (correctStreak >= cost) {
       switch (powerup) {
         case "shuffle":

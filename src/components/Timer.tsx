@@ -1,6 +1,6 @@
 const INTERVAL = 6;
 
-export const Timer = ({ game }) => {
+export const Timer = ({ game }: { game: any }) => {
   const progress = 60 - game?.newGame.remainingTime;
   const timeInRound = progress % INTERVAL;
 

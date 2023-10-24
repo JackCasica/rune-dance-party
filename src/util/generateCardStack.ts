@@ -1,14 +1,13 @@
-import { Card } from "../types/types";
-import { LimbEnum } from "../types/types";
+import { CardProps } from "../types/types";
 
 const getRandomNumber = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
 /* GENERATES AN ARRAY OF CARD OBJECTS. THE CARD OBJECT CONISTS OF A COLOR AND LIMBS ARRAY */
-export const generateCardStack = (totalCards: number): Card[] => {
+export const generateCardStack = (totalCards: number): CardProps[] => {
   const colors = ["pink", "yellow", "orange", "purple"];
-  const stack: Card[] = [];
+  const stack: CardProps[] = [];
   for (let i = 0; i < totalCards; i++) {
     const randomIndex = Math.floor(Math.random() * colors.length);
     const limbs = Array(4)
