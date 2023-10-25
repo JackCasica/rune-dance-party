@@ -102,24 +102,19 @@ export interface GameState {
   testNum?: number;
   gameOver: boolean;
   attractActive: boolean;
+  activeCardIndex: number;
+  roundOver: boolean;
+  timeInSeconds: number;
+  testActionTriggered: boolean;
 }
 
 export type GameActions = {
   getStreak?: () => number;
-  incrementRoundNumber: () => void;
   resetStreak: () => void;
   shuffleEnemyControls: () => void;
   toggleAutoLimb: (params: { activeCardIndex: number }) => void;
   toggleAttract: () => void;
   toggleLimb: (params: { limb: LimbEnum }) => void;
-  setPlayerScoresForRound: () => void;
-  setPlayerTotalScore: () => void;
-  setPlayerStreak: () => void;
-  setWinner: () => void;
-  setActiveCard: (params: { activeCardIndex: number }) => void;
-  resetShuffledControls: () => void;
-  resetAutoLimb: () => void;
-  resetAttract: () => void;
 };
 
 export type CharacterProps = {

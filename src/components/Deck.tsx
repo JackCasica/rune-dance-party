@@ -5,7 +5,7 @@ import { Card } from "./Card";
 
 export const Deck: React.FC<DeckProps> = ({ game, activeCardIndex }) => {
   return (
-    <div className="absolute aspect-square w-1/2  rounded-full border-8 border-black bg-pink-600">
+    <div className="absolute z-50 aspect-square  w-1/2 rounded-full border-8 border-black bg-pink-600">
       {game.newGame.cardStack.map((cardItem: CardProps, i: number) => {
         return (
           <Card

@@ -5,6 +5,9 @@ import spellWaves from "../assets/spell waves.wav";
 import type { PowerUpsProps, Player } from "../types/types";
 import { PowerUpButton } from "./PowerUpButton";
 import { useSound } from "../hooks/useSound";
+import attractImg from "../assets/attract.png";
+import autoLimbImg from "../assets/auto-limb.png";
+import shuffleImg from "../assets/shuffle.png";
 
 export const Powerups: React.FC<PowerUpsProps> = ({
   game,
@@ -63,7 +66,7 @@ export const Powerups: React.FC<PowerUpsProps> = ({
     <div className="flex h-fit gap-2 bg-black/0">
       <PowerUpButton
         powerUp="attract"
-        imageSource="/attract.png"
+        imageSource={attractImg}
         soundEffect={revealBonus}
         correctStreak={correctStreak}
         cost={1}
@@ -71,7 +74,7 @@ export const Powerups: React.FC<PowerUpsProps> = ({
       />
       <PowerUpButton
         powerUp="autoLimb"
-        imageSource="/auto-limb.png"
+        imageSource={autoLimbImg}
         soundEffect={revealBonus}
         correctStreak={correctStreak}
         cost={2}
@@ -79,7 +82,7 @@ export const Powerups: React.FC<PowerUpsProps> = ({
       />
       <PowerUpButton
         powerUp="shuffle"
-        imageSource="/shuffle.png"
+        imageSource={shuffleImg}
         soundEffect={shuffle}
         correctStreak={correctStreak}
         cost={3}

@@ -43,7 +43,7 @@ export const Character: React.FC<CharacterProps> = ({
 
   return (
     <div
-      className={`relative z-50 flex aspect-square w-full flex-col items-center justify-center rounded-3xl bg-black/0 p-4 font-black text-white`}
+      className={`relative z-50 flex aspect-square w-full flex-col items-center justify-center rounded-3xl  p-4 font-black text-white`}
     >
       <PlayerDetails
         displayName={displayName}
